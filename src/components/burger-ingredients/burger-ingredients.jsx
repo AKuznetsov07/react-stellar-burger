@@ -15,14 +15,14 @@ function BurgerIngredients({ingridients}) {
     return (
         <div className={`${styles.BurgerIngredients}` }>
             <p className="text text_type_main-large  mb-5 mt-5">Соберите бургер</p>
-            <div style={{ display: 'flex' }}>
+            <section className={styles.tabSection}>
                 <Tab value="one" active={current === 'one'} onClick={setCurrent}>Булки
                 </Tab>
                 <Tab value="two" active={current === 'two'} onClick={setCurrent}>Соусы
                 </Tab>
                 <Tab value="three" active={current === 'three'} onClick={setCurrent}>Начинки
                 </Tab>
-            </div>
+            </section>
             <div className={styles.ingridientsScroll}>
                 <ScrollingContainer>
                     <BunBlock />

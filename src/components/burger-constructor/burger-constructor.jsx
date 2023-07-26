@@ -94,5 +94,5 @@ BurgerConstructor.propTypes = {
     bunId: PropTypes.string
 };
 BurgerElement.propTypes = {
-    props: IngridientElementPropTypes
+    data: IngridientElementPropTypes
 };

@@ -13,12 +13,12 @@ function App() {
     return (
         <div className={styles.app}>
             <AppHeader/>
-            <div className={styles.main}>
+            <main className={styles.main}>
                 <div className={styles.burgerBlock}>
                     <BurgerIngredients ingridients={data} />
                     <BurgerConstructor fullIngridients={data} selectedIngridients={SelectedIngridients} bunId={BunId} />
                 </div>
-            </div>
+            </main>
         </div>
     );
 }
