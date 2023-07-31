@@ -7,13 +7,18 @@ import IngridientElement from "../ingridient-element/ingridient-element";
 import PropTypes from "prop-types";
 import ingridientPropType from "../../utils/prop-types";
 
-function BurgerIngredients({ingridients}) {
+function BurgerIngredients(props) {
+    const { ingridients, handleOpenModal } = props;
+
     const [current, setCurrent] = React.useState('one');
-    const BunBlock = ingridientBlock({ Title: "Булки", elementType: "bun", data: ingridients })(IngridientElement);
-    const SauceBlock = ingridientBlock({ Title: "Соусы", elementType: "sauce", data: ingridients })(IngridientElement);
-    const FillingBlock = ingridientBlock({ Title: "Начинки", elementType: "main", data: ingridients })(IngridientElement);
+
+    const BunBlock = ingridientBlock({ Title: "Булки", elementType: "bun", data: ingridients, clickHandler: handleOpenModal, wrappedNode:IngridientElement });
+    const SauceBlock = ingridientBlock({ Title: "Соусы", elementType: "sauce", data: ingridients, clickHandler: handleOpenModal, wrappedNode: IngridientElement });
+    const FillingBlock = ingridientBlock({ Title: "Начинки", elementType: "main", data: ingridients, clickHandler: handleOpenModal, wrappedNode: IngridientElement });
+
+
     return (
-        <div className={`${styles.BurgerIngredients}` }>
+        <div className={`${styles.BurgerIngredients}`}>
             <p className="text text_type_main-large  mb-5 mt-5">Соберите бургер</p>
             <section className={styles.tabSection}>
                 <Tab value="one" active={current === 'one'} onClick={setCurrent}>Булки
@@ -25,9 +30,9 @@ function BurgerIngredients({ingridients}) {
             </section>
             <div className={styles.ingridientsScroll}>
                 <ScrollingContainer>
-                    <BunBlock />
-                    <SauceBlock />
-                    <FillingBlock />
+                    {BunBlock}
+                    {SauceBlock}
+                    {FillingBlock }
                 </ScrollingContainer>
             </div>
         </div>
@@ -37,5 +42,6 @@ function BurgerIngredients({ingridients}) {
 export default BurgerIngredients;
 
 BurgerIngredients.propTypes = {
-    ingridients: PropTypes.arrayOf(ingridientPropType)
+    ingridients: PropTypes.arrayOf(ingridientPropType),
+    handleOpenModal: PropTypes.func
 };

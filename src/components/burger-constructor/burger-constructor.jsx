@@ -4,17 +4,14 @@ import { Button, CurrencyIcon, DragIcon, ConstructorElement } from '@ya.praktiku
 import ScrollingContainer from "../scrolling-container/scrolling-container";
 import PropTypes from "prop-types";
 import ingridientPropType from "../../utils/prop-types";
+import OrderInfo from "../order-info/order-info";
 
-
-function BurgerConstructor({ fullIngridients, selectedIngridients, bunId }) {
+const BurgerConstructor = (props) => {
+    const { fullIngridients, selectedIngridients, bunId, handleOpenModal, createOrderFunc } = props
     let topBun;
     let botBun;
     let price = 0;
-    //console.log('before')
-    //console.log(selectedIngridients)
     selectedIngridients.sort((a, b) => a.pos > b.pos ? 1 : -1);
-    //console.log('after')
-    //console.log(selectedIngridients)
     const bunData = fullIngridients.filter((element) => element._id === bunId)[0];
 
     if (bunData) {
@@ -60,7 +57,12 @@ function BurgerConstructor({ fullIngridients, selectedIngridients, bunId }) {
                     <p className="text text_type_digits-medium">{price}</p>
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button htmlType="button" type="primary" size="large">
+                <Button htmlType="button" type="primary" size="large"
+                    onClick={() => {
+                        createOrderFunc().then((res) => {
+                            handleOpenModal(< OrderInfo id={res} />, "");
+                        })
+                    }}>
                 Оформить заказ
                 </Button>
             </div>
@@ -91,7 +93,9 @@ const IngridientElementPropTypes = PropTypes.shape({
 BurgerConstructor.propTypes = {
     fullIngridients: PropTypes.arrayOf(IngridientElementPropTypes),
     selectedIngridients: PropTypes.arrayOf(ingridientPropType),
-    bunId: PropTypes.string
+    bunId: PropTypes.string,
+    handleOpenModal: PropTypes.func,
+    createOrderFunc: PropTypes.func
 };
 BurgerElement.propTypes = {
     data: IngridientElementPropTypes
