@@ -4,8 +4,8 @@ import ReactDOM from 'react-dom';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import PropTypes from "prop-types";
 
-const modalRoot = document.getElementById("root");
-const ModalContainer = (props) => {
+const modalRoot = document.getElementById("modals");
+const Modal = (props) => {
 
     const containerRef = useRef(null);
 
@@ -16,57 +16,55 @@ const ModalContainer = (props) => {
             closeFunc();
     }
 
-    function onClick(eventArgs) {
-        if ((eventArgs.target === containerRef.current))
-            Close();
-    }
-
-    function onKeyDown(eventArgs) {
-        if (eventArgs.key === 'Escape')
-            Close();
-    }
-
     useEffect(() => {
-        document.addEventListener('click', onClick)
+        function handleOverlay(eventArgs) {
+            if ((eventArgs.target === containerRef.current))
+                Close();
+        }
+
+        function onKeyDown(eventArgs) {
+            if (eventArgs.key === 'Escape')
+                Close();
+        }
+
+        document.addEventListener('click', handleOverlay)
         document.addEventListener('keydown', onKeyDown);
         return () => {
-            document.removeEventListener('click', onClick, false)
+            document.removeEventListener('click', handleOverlay, false)
             document.removeEventListener('keydown', onKeyDown, false);
         }
     }, [closeFunc])
 
 
 
-    const closeAction = () => Close();
 
     return (ReactDOM.createPortal(
-        <React.Fragment>
-            <div className={styles.ModalContainer} ref={containerRef}>
-                <ModalForm title={title} closeClickHandler={closeAction}>
-                    {children}
-                </ModalForm>
-            </div>
-        </React.Fragment>, modalRoot
+
+        <div className={styles.Modal} ref={containerRef}>
+            <ModalBody title={title} closeClickHandler={Close}>
+                {children}
+            </ModalBody>
+        </div>, modalRoot
     ))
 }
 
 
 
 
-const ModalForm = (props) => {
+const ModalBody = (props) => {
 
     const { title, closeClickHandler, children } = props;
     return (
-        <div className={styles.ModalForm}>
-            <div className={styles.ModalFormContent}>
-                <div className={styles.ModalFormHeader}>
+        <div className={styles.ModalBody}>
+            <div className={styles.ModalBodyContent}>
+                <div className={styles.ModalBodyHeader}>
                     <p className="text text_type_main-large">{title}</p>
                     <button className={styles.CloseButton} type="button" onClick={closeClickHandler}>
                         <CloseIcon type="primary" />
                     </button>
                 </div>
 
-                <div className={styles.ModalFormBody}>
+                <div className={styles.ModalBodyBody}>
                     {children}
                 </div>
             </div>
@@ -74,15 +72,15 @@ const ModalForm = (props) => {
     );
 }
 
-export default ModalContainer;
+export default Modal;
 
-ModalForm.propTypes = {
+ModalBody.propTypes = {
     title: PropTypes.string,
     closeClickHandler: PropTypes.func,
-    children: PropTypes.arrayOf(PropTypes.node)
+    children: PropTypes.node
 }
-ModalContainer.propTypes = {
+Modal.propTypes = {
     title: PropTypes.string,
     closeFunc: PropTypes.func,
-    children: PropTypes.arrayOf(PropTypes.node)
+    children: PropTypes.node
 }

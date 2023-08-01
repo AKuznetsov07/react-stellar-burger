@@ -3,24 +3,24 @@ import styles from "./app.module.css";
 import AppHeader from "../app-header/app-header";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
-import ModalContainer from "../modal/modal";
+import Modal from "../modal/modal";
 import React, { useEffect, useState } from "react";
-import { Api } from '../api/Api.js';
-import { apiConfig } from "../../utils/constants";
+import { Api } from '../../utils/Api.js';
+import { apiConfig, selectedIngridientsMock, bunIdMock } from "../../utils/constants";
 
 
-const SelectedIngridients = [{ _id: '643d69a5c3f7b9001cfa093c', pos: 2 }, { _id: '643d69a5c3f7b9001cfa093e', pos: 3 }, { _id: '643d69a5c3f7b9001cfa093e', pos: 1 },
-    { _id: '643d69a5c3f7b9001cfa0944', pos: 6 }, { _id: '643d69a5c3f7b9001cfa0944', pos: 4 }, { _id: '643d69a5c3f7b9001cfa0947', pos: 5 }]
-let BunId = '643d69a5c3f7b9001cfa093c';
-
-
-
+const webApi = new Api(apiConfig);
 
 function App() {
-
-    const webApi = new Api(apiConfig);
+    const selectedStack = selectedIngridientsMock;//ToDo:remove
     const [ingridients, setIngridients] = useState([]);
-    const [selectedIngridients, setSelectedIngridients] = useState(SelectedIngridients);
+    const [selectedIngridients, setSelectedIngridients] = useState([]);
+    const [bunId, setBunId] = useState();
+
+
+    //ToDo:remove
+    const [isLoaded, setLoaded] = useState(false);
+
     const [modalFormContent, setModalFormContent] = useState({
         Title: "",
         Node:null
@@ -29,33 +29,44 @@ function App() {
     const [isModalVisible, setModalVisibility] = useState(false);
 
 
-    function GetData() {
+    function getData() {
         webApi.getIngridients()
             .then(newData => {
-                setIngridients(newData.data);
+                setIngridients(newData.data );
             })
             .catch(e => {
-                throw new Error("Failed to load ingridients data.")
-            })
-            .finally(() => { });
+                console.error("Failed to load ingridients data.")
+            });
     }
-    function GetOrder(orderDetails) {
+    function getOrder(orderDetails) {
         return webApi.createOrder(orderDetails)
             .catch(e => {
-                throw new Error("Failed to create order.")
-            })
-            .finally(() => { });
+                console.error("Failed to create order.")
+            });
     }
 
     useEffect(() => {
-        const getSmth = async () => {
-            GetData();
-        };
-        getSmth();
+        getData();
     }, [])
 
 
-    function OpenModal(node, title) {
+    //ToDo:remove
+    useEffect(() => {
+        if (ingridients.length>0)
+            setLoaded(true);
+    }, [ingridients])
+    useEffect(() => {
+        function setMock() {
+            if (isLoaded)
+                addSelectedIngridient(selectedStack.pop());
+        }
+        setMock();
+    }, [isLoaded,selectedIngridients,bunId])
+    //ToDo:remove
+
+
+
+    function openModal(node, title) {
         setModalVisibility(true);
         setModalFormContent({
             Title: title,
@@ -63,24 +74,46 @@ function App() {
         })
     }
 
-    function CloseModal(node) {
+    function closeModal(node) {
         setModalVisibility(false);
     }
-    const handleOpenModal = (node, title) => OpenModal(node, title);
-    const handleCloseModal = (node) => CloseModal(node);
+    const handleOpenModal = (node, title) => openModal(node, title);
+    const handleCloseModal = (node) => closeModal(node);
 
+    function addSelectedIngridient(id) {
+        const element = getIngridientById(id);
+        if (!element) {
+            return; }
+        if (element.type === "bun") {
+            setBunId(id)
+        }
+        else {
+            const newElement = { _id: id, pos: selectedIngridients.length }
+            const newCollection = [...selectedIngridients, newElement];
+            setSelectedIngridients(newCollection);
+        }
+    }
+    function ingridientExists(id) {
+        return getIngridientById(id) ? true : false;
+    }
+    function getIngridientById(id) {
+        let result;
+        result = ingridients.filter((ingridient) => ingridient._id === id)[0];
+
+        return result;
+    }
 
     return (
         <div className={styles.app}>
-            {isModalVisible && (<ModalContainer title={modalFormContent.Title} closeFunc={handleCloseModal}>
+            {isModalVisible && (<Modal title={modalFormContent.Title} closeFunc={handleCloseModal}>
                 {modalFormContent.Node }
-            </ModalContainer>)}
+            </Modal>)}
             <AppHeader/>
             <main className={styles.main}>
                 <div className={styles.burgerBlock}>
                     <BurgerIngredients ingridients={ingridients} handleOpenModal={handleOpenModal} />
-                    <BurgerConstructor fullIngridients={ingridients} selectedIngridients={selectedIngridients} bunId={BunId}
-                        handleOpenModal={handleOpenModal} createOrderFunc={(orderData) => GetOrder(orderData)} />
+                    <BurgerConstructor fullIngridients={ingridients} selectedIngridients={selectedIngridients} bunId={bunId}
+                        handleOpenModal={handleOpenModal} createOrderFunc={(orderData) => getOrder(orderData)} />
                 </div>
             </main>
             

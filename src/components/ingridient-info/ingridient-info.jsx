@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import ingridientPropType from "../../utils/prop-types";
 
 
-const IngridientInfo = (props) => {
+const IngridientDetails = (props) => {
     return (
         <section className={styles.InfoBlock}>
             <img className={styles.InfoImage} src={props.ingridientData.image_large} alt={props.ingridientData.name} />
@@ -32,8 +32,8 @@ const IngridientInfo = (props) => {
         </section>
     );
 }
-export default IngridientInfo;
+export default IngridientDetails;
 
-IngridientInfo.propTypes = {
+IngridientDetails.propTypes = {
     ingridientData: ingridientPropType
 }
