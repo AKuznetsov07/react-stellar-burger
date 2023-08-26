@@ -1,12 +1,13 @@
-import React, { useMemo, useState } from "react";
-import { useSelector } from 'react-redux';
+import React, { useMemo, useContext } from "react";
 import styles from "./ingridient-block.module.css";
 import PropTypes from "prop-types";
+import { FullCollectionContext } from '../../services/appContext';
 
 function IngridientBlock(props) {
-    const fullIngridientsList = useSelector(store => store.fullIngridients.collection);
+    const { fullCollection } = useContext(FullCollectionContext);
     const WrappedComponent=props.wrappedNode
-    const elements = useMemo(() => fullIngridientsList.filter((element) => element.type === props.elementType), [fullIngridientsList, props.elementType]);
+    const elements = useMemo(() => fullCollection.collection.filter((element) => element.type === props.elementType), [fullCollection, props.elementType]);
+
     return (
         elements  &&<div className={styles.ingridientBlockWrapper}>
             <p className="text text_type_main-medium">{props.Title}</p>

@@ -15,24 +15,22 @@ import {
     ORDER_MODAL_TYPE
 } from '../actions';
 
-const fullCollectionState = {
+export const fullCollectionState = {
     collection: []
 };
-const selectedCollectionState = {
+export const selectedCollectionState = {
     collection: [],
     bunData: null,
     totalPrice:0
 };
 
-const modalState = {
-    //modalPopupType: null,
-    //modalPopupData: null,
+export const modalState = {
     modalPopupTitle: null,
     modalPopupControl: null,
     isModalOpened: false
 };
 
-const modalStateReducer = (state = modalState, action) => {
+export function modalStateReducer (state = modalState, action) {
     switch (action.type) {
         case SET_MODAL_CONTENT: {
             let modalControl;
@@ -67,7 +65,7 @@ const modalStateReducer = (state = modalState, action) => {
     }
 }
 
-const selectedIngridientsReducer = (state = selectedCollectionState, action) => {
+export function selectedIngridientsReducer(state = selectedCollectionState, action){
 
     switch (action.type) {
         case ADD_SELECTED_INGRIDIENT: {
@@ -103,7 +101,7 @@ const selectedIngridientsReducer = (state = selectedCollectionState, action) => 
     }
 }
 
-const fullCollectionReducer = (state = fullCollectionState, action) => {
+export function fullCollectionReducer (state = fullCollectionState, action){
     switch (action.type) {
         case FULL_INGRIDIENTS: {
             return {

@@ -3,30 +3,25 @@ import AppHeader from "../app-header/app-header";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import Modal from "../modal/modal";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import { Api } from '../../utils/Api.js';
 import { apiConfig, selectedIngridientsMock } from "../../utils/constants";
-import { useDispatch, useSelector } from 'react-redux';
+//import { useDispatch, useSelector } from 'react-redux';
 
 
+import { fullCollectionReducer, selectedIngridientsReducer, modalStateReducer, modalState, selectedCollectionState, fullCollectionState } from '../../services/reducers';
+import { FullCollectionContext, SelectedCollectionContext, ModalContext } from '../../services/appContext';
 import { FULL_INGRIDIENTS, ADD_SELECTED_INGRIDIENT, SET_SELECTED_BUN, SET_MODAL_VIEW_STATE } from '../../services/actions/';
 
 
 export const webApi = new Api(apiConfig);
 
 function App() {
-    const dispatch = useDispatch();
-    const selectedStack = selectedIngridientsMock;//ToDo:remove
-
-    const modalControl = useSelector(store => store.modalState.modalPopupControl);
-    const isModalOpened = useSelector(store => store.modalState.isModalOpened);
-    const modalTitle = useSelector(store => store.modalState.modalPopupTitle);
-
-    const ingridients = useSelector(store => store.fullIngridients.collection);
-    const selectedIngridientsList = useSelector(store => store.selectedIngridients.collection);
-    const bunData = useSelector(store => store.selectedIngridients.bunData);
+    const selectedStack = selectedIngridientsMock;
     const [isLoaded, setLoaded] = useState(false);
-
+    const [fullCollection, fullCollectionDispatcher] = useReducer(fullCollectionReducer, fullCollectionState, undefined);
+    const [selectedIngridients, selectedIngridientsDispatcher] = useReducer(selectedIngridientsReducer, selectedCollectionState, undefined);
+    const [modal, modalStateDispatcher] = useReducer(modalStateReducer, modalState, undefined);
 
     useEffect(() => {
         getData();
@@ -35,7 +30,7 @@ function App() {
     function getData() {
         webApi.getIngridients()
             .then(res => {
-                dispatch({
+                fullCollectionDispatcher({
                     type: FULL_INGRIDIENTS,
                     data:res.data
                 });
@@ -47,23 +42,21 @@ function App() {
 
     //ToDo:remove on dnd
     useEffect(() => {
-        if (ingridients.length>0)
+        if (fullCollection.collection.length>0)
             setLoaded(true);
-    }, [ingridients])
+    }, [fullCollection.collection])
+
     useEffect(() => {
         function setMock() {
             if (isLoaded)
                 addSelectedIngridient(selectedStack.pop());
         }
         setMock();
-    }, [isLoaded, selectedIngridientsList, bunData])
+    }, [isLoaded, selectedIngridients])
     //ToDo:remove
 
-
-
-
     function closeModal(node) {
-        dispatch({
+        modalStateDispatcher({
             type: SET_MODAL_VIEW_STATE,
             isOpened: false
         });
@@ -76,43 +69,44 @@ function App() {
         if (!element) {
             return; }
         if (element.type === "bun") {
-            dispatch({
+            selectedIngridientsDispatcher({
                 type: SET_SELECTED_BUN,
                 data: element
             });
         }
         else {
-            dispatch({
+            selectedIngridientsDispatcher({
                 type: ADD_SELECTED_INGRIDIENT,
                 data: element
             });
         }
     }
 
-    
-
-    function ingridientExists(id) {
-        return getIngridientById(id) ? true : false;
-    }
     function getIngridientById(id) {
         let result;
-        result = ingridients.filter((ingridient) => ingridient._id === id)[0];
+        result = fullCollection.collection.filter((ingridient) => ingridient._id === id)[0];
 
         return result;
     }
 
     return (
         <div className={styles.app}>
-            {isModalOpened && (<Modal title={modalTitle} closeFunc={handleCloseModal}>
-                {modalControl }
-            </Modal>)}
-            <AppHeader/>
-            <main className={styles.main}>
-                <div className={styles.burgerBlock}>
-                    <BurgerIngredients />{/*handleOpenModal={handleOpenModal} */}
-                    <BurgerConstructor />{/* handleOpenModal={handleOpenModal}*/}
-                </div>
-            </main>
+            <SelectedCollectionContext.Provider value={{ selectedIngridients, selectedIngridientsDispatcher }}>
+                <ModalContext.Provider value={{ modal, modalStateDispatcher }}>
+                    <FullCollectionContext.Provider value={{ fullCollection, fullCollectionDispatcher }}>
+                        {modal.isModalOpened && (<Modal title={modal.modalPopupTitle} closeFunc={handleCloseModal}>
+                            {modal.modalPopupControl}
+                        </Modal>)}
+                        <AppHeader />
+                        <main className={styles.main}>
+                            <div className={styles.burgerBlock}>
+                                <BurgerIngredients />
+                                <BurgerConstructor />
+                            </div>
+                        </main>
+                    </FullCollectionContext.Provider>
+                </ModalContext.Provider>
+            </SelectedCollectionContext.Provider>
         </div>
     );
 }

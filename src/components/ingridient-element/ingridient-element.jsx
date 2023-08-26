@@ -1,33 +1,38 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState, useContext } from "react";
 import styles from "./ingridient-element.module.css";
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from "prop-types";
 import ingridientPropType from "../../utils/prop-types";
 import { SET_MODAL_CONTENT, SET_MODAL_VIEW_STATE, INGRIDIENT_MODAL_TYPE } from '../../services/actions/';
+import { SelectedCollectionContext, ModalContext } from '../../services/appContext';
 
 function IngridientElement(props) {
 
-    const dispatch = useDispatch();
     const elementData = props.elementData;
-
-    const selectedIngridientsList = useSelector(store => store.selectedIngridients.collection);
-    const bunData = useSelector(store => store.selectedIngridients.bunData);
+    const { selectedIngridients } = useContext(SelectedCollectionContext);
+    const { modalStateDispatcher } = useContext(ModalContext);
 
     const [count, setCount] = useState(0);
     useEffect(() => {
-        const newCount = [...selectedIngridientsList, bunData, bunData].filter(x => x?._id === elementData._id).length;
-        setCount(newCount !== 0 ? newCount:null);
-    }, [selectedIngridientsList, bunData])
+        let newCounter = selectedIngridients.collection.filter(x => x?.data._id === elementData._id)?.length;
+
+        if (selectedIngridients.bunData) {
+            if (selectedIngridients.bunData._id === elementData._id) {
+                newCounter += 2;
+            }
+        }
+
+        setCount(newCounter !== 0 ? newCounter : null);
+    }, [elementData._id, selectedIngridients])
 
     function openModal() {
-        dispatch({
+        modalStateDispatcher({
             type: SET_MODAL_CONTENT,
             popupType: INGRIDIENT_MODAL_TYPE,
             data: elementData,
             Title: "Детали ингредиента"
         });
-        dispatch({
+        modalStateDispatcher({
             type: SET_MODAL_VIEW_STATE,
             isOpened: true
         });

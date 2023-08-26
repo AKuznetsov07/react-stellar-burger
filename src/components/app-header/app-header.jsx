@@ -7,20 +7,20 @@ function AppHeader() {
         <header className={styles.appHeader}>
             <nav className={styles.appHeaderContent}>
                 <div className={styles.appHeaderItemBlock}>
-                    <div className={styles.appHeaderItem}>
+                    <a className={styles.appHeaderItem} href="#">
                         <BurgerIcon type="primary" />
                         <p className="text text_type_main-default text_color_inactive">Конструктор</p>
-                    </div>
-                    <div className={styles.appHeaderItem}>
+                    </a>
+                    <a className={styles.appHeaderItem} href="#">
                         <ListIcon type="secondary" />
                         <p className="text text_type_main-default text_color_inactive">Лента заказов</p>
-                    </div>
+                    </a >
                 </div>
                 <Logo className={styles.logo} />
-                <div className={styles.reversedItem}>
+                <a className={styles.reversedItem} href="#">
                     <ProfileIcon type="secondary" />
                     <p className="text text_type_main-default text_color_inactive">Личный кабинет</p>
-                </div>
+                </a>
             </nav>
         </header>
     );

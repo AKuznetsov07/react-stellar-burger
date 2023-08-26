@@ -4,25 +4,25 @@ import "./index.css";
 import App from "./components/app/app";
 import reportWebVitals from "./reportWebVitals";
 
-import { rootReducer } from './services/reducers';
-import { Provider } from 'react-redux';
-import { compose, createStore } from 'redux';
+//import { rootReducer } from './services/reducers';
+//import { Provider } from 'react-redux';
+//import { compose, createStore } from 'redux';
 
 
-const composeEnhancers =
-    typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-        ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
-        : compose;
+//const composeEnhancers =
+//    typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+//        ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+//        : compose;
 
 
-const enhancer = composeEnhancers();
+//const enhancer = composeEnhancers();
 
-const store = createStore(rootReducer, enhancer);
+//const store = createStore(rootReducer, enhancer);
 ReactDOM.render(
     <React.StrictMode>
-        <Provider store={store}>
+        {/*<Provider store={store}>*/}
             <App />
-        </Provider>
+        {/*</Provider>*/}
   </React.StrictMode>,
   document.getElementById("root")
 );
