@@ -1,56 +1,55 @@
 import styles from "./app.module.css";
-//import { data } from "../../utils/data";
 import AppHeader from "../app-header/app-header";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import Modal from "../modal/modal";
 import React, { useEffect, useState } from "react";
 import { Api } from '../../utils/Api.js';
-import { apiConfig, selectedIngridientsMock, bunIdMock } from "../../utils/constants";
+import { apiConfig, selectedIngridientsMock } from "../../utils/constants";
+import { useDispatch, useSelector } from 'react-redux';
 
 
-const webApi = new Api(apiConfig);
+import { FULL_INGRIDIENTS, ADD_SELECTED_INGRIDIENT, SET_SELECTED_BUN, SET_MODAL_VIEW_STATE } from '../../services/actions/';
+
+
+export const webApi = new Api(apiConfig);
 
 function App() {
+    const dispatch = useDispatch();
     const selectedStack = selectedIngridientsMock;//ToDo:remove
-    const [ingridients, setIngridients] = useState([]);
-    const [selectedIngridients, setSelectedIngridients] = useState([]);
-    const [bunId, setBunId] = useState();
 
+    const modalControl = useSelector(store => store.modalState.modalPopupControl);
+    const isModalOpened = useSelector(store => store.modalState.isModalOpened);
+    const modalTitle = useSelector(store => store.modalState.modalPopupTitle);
 
+    const ingridients = useSelector(store => store.fullIngridients.collection);
+    const selectedIngridientsList = useSelector(store => store.selectedIngridients.collection);
+    const bunId = useSelector(store => store.selectedIngridients.bunId);
     //ToDo:remove
     const [isLoaded, setLoaded] = useState(false);
 
-    const [modalFormContent, setModalFormContent] = useState({
-        Title: "",
-        Node:null
-    });
-
-    const [isModalVisible, setModalVisibility] = useState(false);
-
-
-    function getData() {
-        webApi.getIngridients()
-            .then(newData => {
-                setIngridients(newData.data );
-            })
-            .catch(e => {
-                console.error("Failed to load ingridients data.")
-            });
-    }
-    function getOrder(orderDetails) {
-        return webApi.createOrder(orderDetails)
-            .catch(e => {
-                console.error("Failed to create order.")
-            });
-    }
+    const [ingridientsRequest, setIngridientsRequest] = useState(false);
 
     useEffect(() => {
         getData();
     }, [])
 
+    function getData() {
+        webApi.getIngridients(setIngridientsRequest)
+            .then(res => {
+                //setIngridients(newData.data);
+                dispatch({
+                    type: FULL_INGRIDIENTS,
+                    data:res.data
+                });
+            })
+            .catch(e => {
+                console.error("Failed to load ingridients data.")
+                setIngridientsRequest(false);
+            });
+    }
 
-    //ToDo:remove
+    //ToDo:remove on dnd
     useEffect(() => {
         if (ingridients.length>0)
             setLoaded(true);
@@ -61,23 +60,19 @@ function App() {
                 addSelectedIngridient(selectedStack.pop());
         }
         setMock();
-    }, [isLoaded,selectedIngridients,bunId])
+    }, [isLoaded, selectedIngridientsList,bunId])
     //ToDo:remove
 
 
 
-    function openModal(node, title) {
-        setModalVisibility(true);
-        setModalFormContent({
-            Title: title,
-            Node: node
-        })
-    }
 
     function closeModal(node) {
-        setModalVisibility(false);
+        dispatch({
+            type: SET_MODAL_VIEW_STATE,
+            isOpened: false
+        });
     }
-    const handleOpenModal = (node, title) => openModal(node, title);
+
     const handleCloseModal = (node) => closeModal(node);
 
     function addSelectedIngridient(id) {
@@ -85,14 +80,21 @@ function App() {
         if (!element) {
             return; }
         if (element.type === "bun") {
-            setBunId(id)
+            dispatch({
+                type: SET_SELECTED_BUN,
+                id: id
+            });
         }
         else {
-            const newElement = { _id: id, pos: selectedIngridients.length }
-            const newCollection = [...selectedIngridients, newElement];
-            setSelectedIngridients(newCollection);
+            dispatch({
+                type: ADD_SELECTED_INGRIDIENT,
+                id: id
+            });
         }
     }
+
+    
+
     function ingridientExists(id) {
         return getIngridientById(id) ? true : false;
     }
@@ -105,18 +107,16 @@ function App() {
 
     return (
         <div className={styles.app}>
-            {isModalVisible && (<Modal title={modalFormContent.Title} closeFunc={handleCloseModal}>
-                {modalFormContent.Node }
+            {isModalOpened && (<Modal title={modalTitle} closeFunc={handleCloseModal}>
+                {modalControl }
             </Modal>)}
             <AppHeader/>
             <main className={styles.main}>
                 <div className={styles.burgerBlock}>
-                    <BurgerIngredients ingridients={ingridients} handleOpenModal={handleOpenModal} />
-                    <BurgerConstructor fullIngridients={ingridients} selectedIngridients={selectedIngridients} bunId={bunId}
-                        handleOpenModal={handleOpenModal} createOrderFunc={(orderData) => getOrder(orderData)} />
+                    <BurgerIngredients />{/*handleOpenModal={handleOpenModal} */}
+                    <BurgerConstructor />{/* handleOpenModal={handleOpenModal}*/}
                 </div>
             </main>
-            
         </div>
     );
 }

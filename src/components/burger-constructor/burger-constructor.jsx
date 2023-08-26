@@ -1,70 +1,108 @@
 import styles from "./burger-constructor.module.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, CurrencyIcon, DragIcon, ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components'
 import ScrollingContainer from "../scrolling-container/scrolling-container";
-import PropTypes from "prop-types";
 import ingridientPropType from "../../utils/prop-types";
-import OrderInfo from "../order-info/order-info";
+import { SET_MODAL_CONTENT, SET_MODAL_VIEW_STATE, ORDER_MODAL_TYPE, } from '../../services/actions/';
 
-const BurgerConstructor = (props) => {
-    const { fullIngridients, selectedIngridients, bunId, handleOpenModal, createOrderFunc } = props
-    let topBun;
-    let botBun;
-    let price = 0;
-    selectedIngridients.sort((a, b) => a.pos > b.pos ? 1 : -1);
-    const bunData = fullIngridients.filter((element) => element._id === bunId)[0];
+import { webApi } from "../app/app";
 
-    if (bunData) {
-        price += bunData.price * 2;
-        topBun = <div className={styles.BunElement}>
-            <ConstructorElement
-                type="top"
-                isLocked={true}
-                text={`${bunData.name} (низ)`}
-                price={bunData.price}
-                thumbnail={bunData.image_mobile}
-            /></div>;
-        botBun = <div className={styles.BunElement}>
-            <ConstructorElement
-                type="bottom"
-                isLocked={true}
-                text={`${bunData.name} (низ)`}
-                price={bunData.price}
-                thumbnail={bunData.image_mobile}
-            />
-        </div>;
-    }
+import { SET_TOTAL_PRICE } from '../../services/actions/';
 
-    const selectedData = [];
-    for (let i = 0; i < selectedIngridients.length; i++) {
-        var foundElement = fullIngridients.filter((element) => element._id === selectedIngridients[i]._id)[0];
-        if (foundElement) {
-            price += foundElement.price
-            selectedData.push({ pos: i, data: foundElement });
+const BurgerConstructor = () => {
+    const [orderRequest, setOrdersRequest] = useState(false);
+
+    const dispatch = useDispatch();
+
+    const fullIngridientsList = useSelector(store => store.fullIngridients.collection);
+    const selectedIngridientsList = useSelector(store => store.selectedIngridients.collection);
+    const bunId = useSelector(store => store.selectedIngridients.bunId);
+    const totalPrice = useSelector(store => store.selectedIngridients.totalPrice);
+    const [burgerContentPrice, setBurgerContentPrice] = useState(0);
+    const [bunData, setBunData] = useState();
+    const [selectedData, setSelectedData] = useState([]);
+
+    useEffect(() => {
+        setBunData(fullIngridientsList.filter((element) => element._id === bunId)[0]);
+    }, [bunId, fullIngridientsList])
+    
+
+    useEffect(() => {
+        for (let i = 0; i < selectedIngridientsList.length; i++) {
+            var foundElement = fullIngridientsList.filter((element) => element._id === selectedIngridientsList[i]._id)[0];
+            if (foundElement) {
+                setBurgerContentPrice(burgerContentPrice+foundElement.price)
+                setSelectedData([...selectedData, { pos: i, data: foundElement }])
+            }
         }
+    }, [selectedIngridientsList, fullIngridientsList])
+
+    function getOrder() {
+        const orderDetails = [bunId, ...selectedIngridientsList.map(x => x._id),  bunId]
+        return webApi.createOrder(orderDetails, setOrdersRequest).then(res => openModal(res.order.number))
+            .catch(e => {
+                console.error("Failed to create order.")
+            });
     }
+
+    function openModal(data) {
+        dispatch({
+            type: SET_MODAL_CONTENT,
+            popupType: ORDER_MODAL_TYPE,
+            data: data,
+            Title: ""
+        });
+        dispatch({
+            type: SET_MODAL_VIEW_STATE,
+            isOpened: true
+        });
+    }
+
+    useEffect(() => {
+        let price = burgerContentPrice;
+        if (bunData && bunData.price)
+            price += 2 * (bunData.price);
+        dispatch({
+            type: SET_TOTAL_PRICE,
+            newPrice: price
+        });
+    }, [bunData, burgerContentPrice, dispatch])
+
     return (
         <div className={styles.constructorContainer}>
-            {topBun}
+            {bunData &&
+                <div className={styles.BunElement}>
+                    <ConstructorElement
+                        type="top"
+                        isLocked={true}
+                        text={`${bunData.name} (низ)`}
+                        price={bunData.price}
+                        thumbnail={bunData.image_mobile}
+                    /></div>
+            }
             <div className={styles.ingridientsScroll}>
                 <ScrollingContainer>
                     {selectedData.map((elementData) => (<BurgerElement key={elementData.pos} data={elementData.data} />))}
                 </ScrollingContainer>
             </div>
-            {botBun}
+            {bunData&&
+                <div className={styles.BunElement}>
+                    <ConstructorElement
+                        type="bottom"
+                        isLocked={true}
+                        text={`${bunData.name} (низ)`}
+                        price={bunData.price}
+                        thumbnail={bunData.image_mobile}
+                    />
+                </div>
+            }
             <div className={styles.constructorFinalBlock}>
                 <div className={styles.constructorPriceBlock}>
-                    <p className="text text_type_digits-medium">{price}</p>
+                    <p className="text text_type_digits-medium">{totalPrice}</p>
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button htmlType="button" type="primary" size="large"
-                    onClick={() => {
-                        createOrderFunc().then((res) => {
-                            handleOpenModal(< OrderInfo id={res} />, "");
-                        })
-                    }}>
-                Оформить заказ
-                </Button>
+                <Button htmlType="button" type="primary" size="large" onClick={getOrder}>Оформить заказ</Button>
             </div>
         </div>
     );
@@ -85,18 +123,6 @@ const BurgerElement = (props) => {
 
 export default BurgerConstructor;
 
-const IngridientElementPropTypes = PropTypes.shape({
-    item: ingridientPropType,
-    count: PropTypes.number,
-});
-
-BurgerConstructor.propTypes = {
-    fullIngridients: PropTypes.arrayOf(IngridientElementPropTypes),
-    selectedIngridients: PropTypes.arrayOf(ingridientPropType),
-    bunId: PropTypes.string,
-    handleOpenModal: PropTypes.func,
-    createOrderFunc: PropTypes.func
-};
 BurgerElement.propTypes = {
-    data: IngridientElementPropTypes
+    data: ingridientPropType
 };

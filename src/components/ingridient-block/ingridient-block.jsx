@@ -1,28 +1,26 @@
-import React from 'react';
+import { useSelector } from 'react-redux';
 import styles from "./ingridient-block.module.css";
 import PropTypes from "prop-types";
 import ingridientPropType from "../../utils/prop-types";
 import IngridientDetails from "../ingridient-info/ingridient-info";
 
-function ingridientBlock(props) {
+function IngridientBlock(props) {
+    const fullIngridientsList = useSelector(store => store.fullIngridients.collection);
     const WrappedComponent=props.wrappedNode
-    const elements = props.data.filter((element) => element.type === props.elementType);
+    const elements = fullIngridientsList.filter((element) => element.type === props.elementType);
     return (
-        <div className={styles.ingridientBlockWrapper}>
+        elements  &&<div className={styles.ingridientBlockWrapper}>
             <p className="text text_type_main-medium">{props.Title}</p>
             <section className={styles.ingridientBlock}>
-                {elements.map((element) => <WrappedComponent key={element._id} elementData={element} onClick={() => { props.clickHandler(< IngridientDetails ingridientData={element} />,"Детали ингредиента") }} />)}
+                {elements.map((element) => <WrappedComponent key={element._id} elementData={element}  />)}
             </section>
         </div>
     );
 }
 
-export default ingridientBlock;
+export default IngridientBlock;
 
-ingridientBlock.propTypes = {
-    Title: PropTypes.string,
+IngridientBlock.propTypes = {
     elementType: PropTypes.string,
-    data: PropTypes.arrayOf(ingridientPropType),
-    clickHandler: PropTypes.func,
     wrappedNode: PropTypes.node
 };

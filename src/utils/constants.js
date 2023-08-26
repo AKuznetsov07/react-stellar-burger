@@ -1,6 +1,6 @@
 export const apiConfig = {
     baseUrl: 'https://norma.nomoreparties.space/api',
-    headers: { }
+    headers: { "Content-Type": "application/json; charset=UTF-8" }
 };
 
 export const selectedIngridientsMockOld = [{ _id: '643d69a5c3f7b9001cfa0947', pos: 2 }, { _id: '643d69a5c3f7b9001cfa093e', pos: 3 }, { _id: '643d69a5c3f7b9001cfa093e', pos: 1 },
