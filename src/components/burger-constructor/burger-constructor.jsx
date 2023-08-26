@@ -1,5 +1,5 @@
 import styles from "./burger-constructor.module.css";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, CurrencyIcon, DragIcon, ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components'
 import ScrollingContainer from "../scrolling-container/scrolling-container";
@@ -8,39 +8,16 @@ import { SET_MODAL_CONTENT, SET_MODAL_VIEW_STATE, ORDER_MODAL_TYPE, } from '../.
 
 import { webApi } from "../app/app";
 
-import { SET_TOTAL_PRICE } from '../../services/actions/';
-
 const BurgerConstructor = () => {
-    const [orderRequest, setOrdersRequest] = useState(false);
-
     const dispatch = useDispatch();
 
-    const fullIngridientsList = useSelector(store => store.fullIngridients.collection);
     const selectedIngridientsList = useSelector(store => store.selectedIngridients.collection);
-    const bunId = useSelector(store => store.selectedIngridients.bunId);
+    const bunData = useSelector(store => store.selectedIngridients.bunData);
     const totalPrice = useSelector(store => store.selectedIngridients.totalPrice);
-    const [burgerContentPrice, setBurgerContentPrice] = useState(0);
-    const [bunData, setBunData] = useState();
-    const [selectedData, setSelectedData] = useState([]);
-
-    useEffect(() => {
-        setBunData(fullIngridientsList.filter((element) => element._id === bunId)[0]);
-    }, [bunId, fullIngridientsList])
     
-
-    useEffect(() => {
-        for (let i = 0; i < selectedIngridientsList.length; i++) {
-            var foundElement = fullIngridientsList.filter((element) => element._id === selectedIngridientsList[i]._id)[0];
-            if (foundElement) {
-                setBurgerContentPrice(burgerContentPrice+foundElement.price)
-                setSelectedData([...selectedData, { pos: i, data: foundElement }])
-            }
-        }
-    }, [selectedIngridientsList, fullIngridientsList])
-
     function getOrder() {
-        const orderDetails = [bunId, ...selectedIngridientsList.map(x => x._id),  bunId]
-        return webApi.createOrder(orderDetails, setOrdersRequest).then(res => openModal(res.order.number))
+        const orderDetails = [bunData._id, ...selectedIngridientsList.map(x => x._id), bunData._id]
+        return webApi.createOrder(orderDetails).then(res => openModal(res.order.number))
             .catch(e => {
                 console.error("Failed to create order.")
             });
@@ -59,16 +36,6 @@ const BurgerConstructor = () => {
         });
     }
 
-    useEffect(() => {
-        let price = burgerContentPrice;
-        if (bunData && bunData.price)
-            price += 2 * (bunData.price);
-        dispatch({
-            type: SET_TOTAL_PRICE,
-            newPrice: price
-        });
-    }, [bunData, burgerContentPrice, dispatch])
-
     return (
         <div className={styles.constructorContainer}>
             {bunData &&
@@ -83,7 +50,7 @@ const BurgerConstructor = () => {
             }
             <div className={styles.ingridientsScroll}>
                 <ScrollingContainer>
-                    {selectedData.map((elementData) => (<BurgerElement key={elementData.pos} data={elementData.data} />))}
+                    {selectedIngridientsList.map((elementData) => (<BurgerElement key={elementData.pos} data={elementData.data} />))}
                 </ScrollingContainer>
             </div>
             {bunData&&

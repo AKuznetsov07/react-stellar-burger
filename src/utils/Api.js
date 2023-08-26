@@ -4,24 +4,21 @@ export class Api {
     }
 
 
-    _request(url, options, setProgressState) {
-        return fetch(url, options).then(res => this._checkResult(res, setProgressState));
+    _request(url, options) {
+        return fetch(url, options).then(res => this._checkResult(res));
     }
 
-    _checkResult(res, setProgressState) {
+    _checkResult(res) {
         if (res.ok) {
-            setProgressState(false);
             return res.json();
         }
         return Promise.reject(`Ошибка: ${res.status}`);
     }
 
-    getIngridients(setProgressState) {
-        setProgressState(true);
-        return this._request(`${this._config.baseUrl}/ingredients`, { headers: this._config.headers }, setProgressState);
+    getIngridients() {
+        return this._request(`${this._config.baseUrl}/ingredients`, { headers: this._config.headers });
     }
-    createOrder(orderDetails, setProgressState) {
-        setProgressState(true);
-        return this._request(`${this._config.baseUrl}/orders`, { method:"POST",headers: this._config.headers, body: JSON.stringify({ ingredients: orderDetails }) }, setProgressState);
+    createOrder(orderDetails) {
+        return this._request(`${this._config.baseUrl}/orders`, { method:"POST",headers: this._config.headers, body: JSON.stringify({ ingredients: orderDetails }) });
     }
 }

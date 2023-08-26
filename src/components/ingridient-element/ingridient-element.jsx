@@ -12,13 +12,13 @@ function IngridientElement(props) {
     const elementData = props.elementData;
 
     const selectedIngridientsList = useSelector(store => store.selectedIngridients.collection);
-    const selectedBunId = useSelector(store => store.selectedIngridients.bunId);
+    const bunData = useSelector(store => store.selectedIngridients.bunData);
 
-    const [Count, setCount] = useState(0);
+    const [count, setCount] = useState(0);
     useEffect(() => {
-        const newCount = [...selectedIngridientsList, { _id: selectedBunId }, { _id: selectedBunId }].filter(x => x._id === elementData._id).length;
+        const newCount = [...selectedIngridientsList, bunData, bunData].filter(x => x?._id === elementData._id).length;
         setCount(newCount !== 0 ? newCount:null);
-    }, [selectedIngridientsList, selectedBunId])
+    }, [selectedIngridientsList, bunData])
 
     function openModal() {
         dispatch({
@@ -44,7 +44,7 @@ function IngridientElement(props) {
                 <CurrencyIcon type="primary" />
             </div>
             <p className="text text_type_main-small" >{props.elementData.name}</p>
-            {Count && <Counter count={Count} size="default" extraClass="m-1" />}
+            {count && <Counter count={count} size="default" extraClass="m-1" />}
             
         </li>
     );

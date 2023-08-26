@@ -20,7 +20,7 @@ const fullCollectionState = {
 };
 const selectedCollectionState = {
     collection: [],
-    bunId: null,
+    bunData: null,
     totalPrice:0
 };
 
@@ -71,17 +71,24 @@ const selectedIngridientsReducer = (state = selectedCollectionState, action) => 
 
     switch (action.type) {
         case ADD_SELECTED_INGRIDIENT: {
-            const newElement = { _id: action.id, pos: state.collection.length }
+            const newElement = { data: action.data, pos: state.collection.length }
             const newCollection = [...state.collection, newElement].sort((a, b) => a.pos > b.pos ? 1 : -1);
             return {
                 ...state,
-                collection: newCollection
+                collection: newCollection,
+                totalPrice: state.totalPrice + action.data.price
             };
         }
         case SET_SELECTED_BUN: {
+            let oldBunPrice = 0;
+            if (state.bunData) {
+                oldBunPrice = 2 * state.bunData.price;
+            }
+            const deltaPrice = 2 * action.data.price - oldBunPrice;
             return {
                 ...state,
-                bunId: action.id
+                bunData: action.data,
+                totalPrice: state.totalPrice + deltaPrice
             };
         }
         case SET_TOTAL_PRICE: {

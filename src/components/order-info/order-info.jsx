@@ -4,12 +4,10 @@ import doneImg from '../../images/done.svg'
 
 
 
-function OrderInfo(props) {//TODO: propstype unknown, need to get real request first.
-    const defaultOrderId = 123;
-    const orderId = /*props*/ false? props.id.data: defaultOrderId ;
+function OrderInfo(props) {
     return (
         <section className={styles.OrderInfoBlock}>
-            <p className="text text_type_digits-large">{orderId}</p>
+            <p className="text text_type_digits-large">{props.id}</p>
             <p className="text text_type_main-medium">идентификатор заказа</p>
             <img src={doneImg} alt="Order Done" className={styles.DoneImg} />
             <div className={styles.Comment}>

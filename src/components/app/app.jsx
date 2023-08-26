@@ -24,20 +24,17 @@ function App() {
 
     const ingridients = useSelector(store => store.fullIngridients.collection);
     const selectedIngridientsList = useSelector(store => store.selectedIngridients.collection);
-    const bunId = useSelector(store => store.selectedIngridients.bunId);
-    //ToDo:remove
+    const bunData = useSelector(store => store.selectedIngridients.bunData);
     const [isLoaded, setLoaded] = useState(false);
 
-    const [ingridientsRequest, setIngridientsRequest] = useState(false);
 
     useEffect(() => {
         getData();
     }, [])
 
     function getData() {
-        webApi.getIngridients(setIngridientsRequest)
+        webApi.getIngridients()
             .then(res => {
-                //setIngridients(newData.data);
                 dispatch({
                     type: FULL_INGRIDIENTS,
                     data:res.data
@@ -45,7 +42,6 @@ function App() {
             })
             .catch(e => {
                 console.error("Failed to load ingridients data.")
-                setIngridientsRequest(false);
             });
     }
 
@@ -60,7 +56,7 @@ function App() {
                 addSelectedIngridient(selectedStack.pop());
         }
         setMock();
-    }, [isLoaded, selectedIngridientsList,bunId])
+    }, [isLoaded, selectedIngridientsList, bunData])
     //ToDo:remove
 
 
@@ -82,13 +78,13 @@ function App() {
         if (element.type === "bun") {
             dispatch({
                 type: SET_SELECTED_BUN,
-                id: id
+                data: element
             });
         }
         else {
             dispatch({
                 type: ADD_SELECTED_INGRIDIENT,
-                id: id
+                data: element
             });
         }
     }
