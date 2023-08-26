@@ -4,10 +4,8 @@ import OrderInfo from "../../components/order-info/order-info";
 
 import {
     FULL_INGRIDIENTS,
-    SET_SELECTED_INGRIDIENTS,
     ADD_SELECTED_INGRIDIENT,
     SET_SELECTED_BUN,
-    REMOVE_SELECTED_ITEM,
     SET_TOTAL_PRICE,
     SET_MODAL_CONTENT,
     SET_MODAL_VIEW_STATE,
