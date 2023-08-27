@@ -1,7 +1,7 @@
-.ingridientBlock {
+.ingredientBlock {
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
-.ingridientBlockWrapper {
+.ingredientBlockWrapper {
     margin: 40px 0 0;
 }

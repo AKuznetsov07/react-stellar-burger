@@ -1,4 +1,4 @@
-.ingridientElement {
+.ingredientElement {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -7,7 +7,7 @@
     margin: 0;
     text-align:center;
 }
-.ingridientPriceBlock {
+.ingredientPriceBlock {
     display: flex;
     flex-direction: row;
     gap: 8px;

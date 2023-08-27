@@ -7,8 +7,6 @@
     height: 88px;
 }
 .appHeaderContent {
-    /*display: flex;*/
-    /*flex-direction: row;*/
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     justify-items: center;
@@ -24,6 +22,7 @@
     padding: 16px, 20px, 16px, 20px;
     cursor: pointer;
     gap: 8px;
+    text-decoration: none;
 }
 .appHeaderItemBlock {
     display: flex;

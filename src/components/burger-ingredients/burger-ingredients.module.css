@@ -7,7 +7,7 @@
     box-sizing:content-box;
     overflow: hidden;
 }
-.ingridientsScroll {
+.ingredientsScroll {
     height: calc(100% - 140px);
 }
 .tabSection {
