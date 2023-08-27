@@ -4,111 +4,143 @@ import BurgerConstructor from "../burger-constructor/burger-constructor";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import Modal from "../modal/modal";
 import React, { useEffect, useState, useReducer } from "react";
-import { Api } from '../../utils/Api.js';
-import { apiConfig, selectedIngridientsMock } from "../../utils/constants";
-//import { useDispatch, useSelector } from 'react-redux';
+import { Api } from "../../utils/Api.js";
+import { apiConfig, selectedIngredientsMock } from "../../utils/constants";
 
-
-import { fullCollectionReducer, selectedIngridientsReducer, modalStateReducer, modalState, selectedCollectionState, fullCollectionState } from '../../services/reducers';
-import { FullCollectionContext, SelectedCollectionContext, ModalContext } from '../../services/appContext';
-import { FULL_INGRIDIENTS, ADD_SELECTED_INGRIDIENT, SET_SELECTED_BUN, SET_MODAL_VIEW_STATE } from '../../services/actions/';
-
+import {
+  fullCollectionReducer,
+  selectedIngredientsReducer,
+  modalStateReducer,
+  modalState,
+  selectedCollectionState,
+  fullCollectionState,
+} from "../../services/reducers";
+import {
+  FullCollectionContext,
+  SelectedCollectionContext,
+  ModalContext,
+} from "../../services/appContext";
+import {
+  FULL_INGRIDIENTS,
+  ADD_SELECTED_INGRIDIENT,
+  SET_SELECTED_BUN,
+  SET_MODAL_VIEW_STATE,
+} from "../../services/actions/";
 
 export const webApi = new Api(apiConfig);
 
 function App() {
-    const selectedStack = selectedIngridientsMock;
-    const [isLoaded, setLoaded] = useState(false);
-    const [fullCollection, fullCollectionDispatcher] = useReducer(fullCollectionReducer, fullCollectionState, undefined);
-    const [selectedIngridients, selectedIngridientsDispatcher] = useReducer(selectedIngridientsReducer, selectedCollectionState, undefined);
-    const [modal, modalStateDispatcher] = useReducer(modalStateReducer, modalState, undefined);
+  const selectedStack = selectedIngredientsMock;
+  const [isLoaded, setLoaded] = useState(false);
+  const [fullCollection, fullCollectionDispatcher] = useReducer(
+    fullCollectionReducer,
+    fullCollectionState,
+    undefined,
+  );
+  const [selectedIngredients, selectedIngredientsDispatcher] = useReducer(
+    selectedIngredientsReducer,
+    selectedCollectionState,
+    undefined,
+  );
+  const [modal, modalStateDispatcher] = useReducer(
+    modalStateReducer,
+    modalState,
+    undefined,
+  );
 
-    useEffect(() => {
-        getData();
-    }, [])
+  useEffect(() => {
+    getData();
+  }, []);
 
-    function getData() {
-        webApi.getIngridients()
-            .then(res => {
-                fullCollectionDispatcher({
-                    type: FULL_INGRIDIENTS,
-                    data:res.data
-                });
-            })
-            .catch(e => {
-                console.error("Failed to load ingridients data.")
-            });
-    }
-
-    //ToDo:remove on dnd
-    useEffect(() => {
-        if (fullCollection.collection.length>0)
-            setLoaded(true);
-    }, [fullCollection.collection])
-
-    useEffect(() => {
-        function setMock() {
-            if (isLoaded)
-                addSelectedIngridient(selectedStack.pop());
-        }
-        setMock();
-    }, [isLoaded, selectedIngridients])
-    //ToDo:remove
-
-    function closeModal(node) {
-        modalStateDispatcher({
-            type: SET_MODAL_VIEW_STATE,
-            isOpened: false
+  function getData() {
+    webApi
+      .getIngredients()
+      .then((res) => {
+        fullCollectionDispatcher({
+          type: FULL_INGRIDIENTS,
+          data: res.data,
         });
+      })
+      .catch((e) => {
+        console.error("Failed to load ingredients data.");
+      });
+  }
+
+  //ToDo:remove on dnd
+  useEffect(() => {
+    if (fullCollection.collection.length > 0) setLoaded(true);
+  }, [fullCollection.collection]);
+
+  useEffect(() => {
+    function setMock() {
+      if (isLoaded) addSelectedIngredient(selectedStack.pop());
     }
+    setMock();
+  }, [isLoaded, selectedIngredients]);
+  //ToDo:remove
 
-    const handleCloseModal = (node) => closeModal(node);
+  function closeModal(node) {
+    modalStateDispatcher({
+      type: SET_MODAL_VIEW_STATE,
+      isOpened: false,
+    });
+  }
 
-    function addSelectedIngridient(id) {
-        const element = getIngridientById(id);
-        if (!element) {
-            return; }
-        if (element.type === "bun") {
-            selectedIngridientsDispatcher({
-                type: SET_SELECTED_BUN,
-                data: element
-            });
-        }
-        else {
-            selectedIngridientsDispatcher({
-                type: ADD_SELECTED_INGRIDIENT,
-                data: element
-            });
-        }
+  const handleCloseModal = (node) => closeModal(node);
+
+  function addSelectedIngredient(id) {
+    const element = getIngredientById(id);
+    if (!element) {
+      return;
     }
-
-    function getIngridientById(id) {
-        let result;
-        result = fullCollection.collection.filter((ingridient) => ingridient._id === id)[0];
-
-        return result;
+    if (element.type === "bun") {
+      selectedIngredientsDispatcher({
+        type: SET_SELECTED_BUN,
+        data: element,
+      });
+    } else {
+      selectedIngredientsDispatcher({
+        type: ADD_SELECTED_INGRIDIENT,
+        data: element,
+      });
     }
+  }
 
-    return (
-        <div className={styles.app}>
-            <SelectedCollectionContext.Provider value={{ selectedIngridients, selectedIngridientsDispatcher }}>
-                <ModalContext.Provider value={{ modal, modalStateDispatcher }}>
-                    <FullCollectionContext.Provider value={{ fullCollection, fullCollectionDispatcher }}>
-                        {modal.isModalOpened && (<Modal title={modal.modalPopupTitle} closeFunc={handleCloseModal}>
-                            {modal.modalPopupControl}
-                        </Modal>)}
-                        <AppHeader />
-                        <main className={styles.main}>
-                            <div className={styles.burgerBlock}>
-                                <BurgerIngredients />
-                                <BurgerConstructor />
-                            </div>
-                        </main>
-                    </FullCollectionContext.Provider>
-                </ModalContext.Provider>
-            </SelectedCollectionContext.Provider>
-        </div>
-    );
+  function getIngredientById(id) {
+    let result;
+    result = fullCollection.collection.filter(
+      (ingredient) => ingredient._id === id,
+    )[0];
+
+    return result;
+  }
+
+  return (
+    <div className={styles.app}>
+      <SelectedCollectionContext.Provider
+        value={{ selectedIngredients, selectedIngredientsDispatcher }}
+      >
+        <ModalContext.Provider value={{ modal, modalStateDispatcher }}>
+          <FullCollectionContext.Provider
+            value={{ fullCollection, fullCollectionDispatcher }}
+          >
+            {modal.isModalOpened && (
+              <Modal title={modal.modalPopupTitle} closeFunc={handleCloseModal}>
+                {modal.modalPopupControl}
+              </Modal>
+            )}
+            <AppHeader />
+            <main className={styles.main}>
+              <div className={styles.burgerBlock}>
+                <BurgerIngredients />
+                <BurgerConstructor />
+              </div>
+            </main>
+          </FullCollectionContext.Provider>
+        </ModalContext.Provider>
+      </SelectedCollectionContext.Provider>
+    </div>
+  );
 }
 
 export default App;
