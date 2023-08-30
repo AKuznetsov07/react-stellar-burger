@@ -1,91 +1,124 @@
 import styles from "./burger-constructor.module.css";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import { useDrop } from "react-dnd";
 import {
   Button,
   CurrencyIcon,
   ConstructorElement,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import ScrollingContainer from "../scrolling-container/scrolling-container";
+import { useDispatch, useSelector } from "react-redux";
 import {
   SET_MODAL_CONTENT,
   SET_MODAL_VIEW_STATE,
   ORDER_MODAL_TYPE,
+  CLEAR_SELECTION,
 } from "../../services/actions/";
-import {
-  SelectedCollectionContext,
-  ModalContext,
-} from "../../services/appContext";
+
 import { BurgerElement } from "../burger-element/burger-element";
 
 import { webApi } from "../app/app";
 
 const BurgerConstructor = () => {
-  const { selectedIngredients } = useContext(SelectedCollectionContext);
-  const { modalStateDispatcher } = useContext(ModalContext);
+  const dispatch = useDispatch();
+
+  const [canOrder, setCanOrder] = React.useState(false);
+  const isDragging = useSelector((store) => store.utils.isDragged);
+  const selectedIngredientsList = useSelector(
+    (store) => store.selectedIngredients.collection,
+  );
+  const bunData = useSelector((store) => store.selectedIngredients.bunData);
+  const totalPrice = useSelector(
+    (store) => store.selectedIngredients.totalPrice,
+  );
+
+  useEffect(() => {
+    if (bunData || selectedIngredientsList.length > 0) {
+      setCanOrder(true);
+    } else {
+      setCanOrder(false);
+    }
+  }, [selectedIngredientsList, bunData]);
+  const [, drop] = useDrop({
+    accept: "test",
+    collect: (monitor) => ({}),
+    drop(item) {
+      dispatch({
+        type: item.actionType,
+        data: item.elementData,
+      });
+    },
+  });
 
   function getOrder() {
     const orderDetails = [
-      selectedIngredients.bunData._id,
-      ...selectedIngredients.collection.map((x) => x._id),
-      selectedIngredients.bunData._id,
+      bunData._id,
+      ...selectedIngredientsList.map((x) => x._id),
+      bunData._id,
     ];
     return webApi
       .createOrder(orderDetails)
       .then((res) => openModal(res.order.number))
+      .then(clearOrder)
       .catch((e) => {
         console.error("Failed to create order.");
       });
   }
-
+  function clearOrder() {
+    dispatch({
+      type: CLEAR_SELECTION,
+    });
+  }
   function openModal(data) {
-    modalStateDispatcher({
+    dispatch({
       type: SET_MODAL_CONTENT,
       popupType: ORDER_MODAL_TYPE,
       data: data,
       Title: "",
     });
-    modalStateDispatcher({
+    dispatch({
       type: SET_MODAL_VIEW_STATE,
       isOpened: true,
     });
   }
-
   return (
-    <div className={styles.constructorContainer}>
-      {selectedIngredients.bunData && (
+    <div className={styles.constructorContainer} ref={drop}>
+      {bunData && (
         <div className={styles.BunElement}>
           <ConstructorElement
             type="top"
             isLocked={true}
-            text={`${selectedIngredients.bunData.name} (низ)`}
-            price={selectedIngredients.bunData.price}
-            thumbnail={selectedIngredients.bunData.image_mobile}
+            text={`${bunData.name} (низ)`}
+            price={bunData.price}
+            thumbnail={bunData.image_mobile}
           />
         </div>
       )}
-      <div className={styles.ingredientsScroll}>
+      <div
+        className={`${styles.ingredientsScroll} ${
+          isDragging ? styles.draggingBorder : ""
+        }`}
+      >
         <ScrollingContainer>
-          {selectedIngredients.collection.map((elementData) => (
-            <BurgerElement key={elementData.pos} data={elementData.data} />
+          {selectedIngredientsList.map((elementData) => (
+            <BurgerElement key={elementData.pos} elementModel={elementData} />
           ))}
         </ScrollingContainer>
       </div>
-      {selectedIngredients.bunData && (
+      {bunData && (
         <div className={styles.BunElement}>
           <ConstructorElement
             type="bottom"
             isLocked={true}
-            text={`${selectedIngredients.bunData.name} (низ)`}
-            price={selectedIngredients.bunData.price}
-            thumbnail={selectedIngredients.bunData.image_mobile}
+            text={`${bunData.name} (низ)`}
+            price={bunData.price}
+            thumbnail={bunData.image_mobile}
           />
         </div>
       )}
       <div className={styles.constructorFinalBlock}>
         <div className={styles.constructorPriceBlock}>
-          <p className="text text_type_digits-medium">
-            {selectedIngredients.totalPrice}
-          </p>
+          <p className="text text_type_digits-medium">{totalPrice}</p>
           <CurrencyIcon type="primary" />
         </div>
         <Button
@@ -93,6 +126,7 @@ const BurgerConstructor = () => {
           type="primary"
           size="large"
           onClick={getOrder}
+          disabled={!canOrder}
         >
           Оформить заказ
         </Button>

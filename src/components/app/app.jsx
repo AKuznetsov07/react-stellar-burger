@@ -3,50 +3,27 @@ import AppHeader from "../app-header/app-header";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import Modal from "../modal/modal";
-import React, { useEffect, useState, useReducer } from "react";
+import React, { useEffect } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { Api } from "../../utils/Api.js";
-import { apiConfig, selectedIngredientsMock } from "../../utils/constants";
-
+import { apiConfig } from "../../utils/constants";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  fullCollectionReducer,
-  selectedIngredientsReducer,
-  modalStateReducer,
-  modalState,
-  selectedCollectionState,
-  fullCollectionState,
-} from "../../services/reducers";
-import {
-  FullCollectionContext,
-  SelectedCollectionContext,
-  ModalContext,
-} from "../../services/appContext";
-import {
-  FULL_INGRIDIENTS,
-  ADD_SELECTED_INGRIDIENT,
-  SET_SELECTED_BUN,
+  FULL_INGREDIENTS,
   SET_MODAL_VIEW_STATE,
 } from "../../services/actions/";
 
 export const webApi = new Api(apiConfig);
 
 function App() {
-  const selectedStack = selectedIngredientsMock;
-  const [isLoaded, setLoaded] = useState(false);
-  const [fullCollection, fullCollectionDispatcher] = useReducer(
-    fullCollectionReducer,
-    fullCollectionState,
-    undefined,
+  const dispatch = useDispatch();
+
+  const modalControl = useSelector(
+    (store) => store.modalState.modalPopupControl,
   );
-  const [selectedIngredients, selectedIngredientsDispatcher] = useReducer(
-    selectedIngredientsReducer,
-    selectedCollectionState,
-    undefined,
-  );
-  const [modal, modalStateDispatcher] = useReducer(
-    modalStateReducer,
-    modalState,
-    undefined,
-  );
+  const isModalOpened = useSelector((store) => store.modalState.isModalOpened);
+  const modalTitle = useSelector((store) => store.modalState.modalPopupTitle);
 
   useEffect(() => {
     getData();
@@ -56,8 +33,8 @@ function App() {
     webApi
       .getIngredients()
       .then((res) => {
-        fullCollectionDispatcher({
-          type: FULL_INGRIDIENTS,
+        dispatch({
+          type: FULL_INGREDIENTS,
           data: res.data,
         });
       })
@@ -66,21 +43,8 @@ function App() {
       });
   }
 
-  //ToDo:remove on dnd
-  useEffect(() => {
-    if (fullCollection.collection.length > 0) setLoaded(true);
-  }, [fullCollection.collection]);
-
-  useEffect(() => {
-    function setMock() {
-      if (isLoaded) addSelectedIngredient(selectedStack.pop());
-    }
-    setMock();
-  }, [isLoaded, selectedIngredients]);
-  //ToDo:remove
-
   function closeModal(node) {
-    modalStateDispatcher({
+    dispatch({
       type: SET_MODAL_VIEW_STATE,
       isOpened: false,
     });
@@ -88,57 +52,22 @@ function App() {
 
   const handleCloseModal = (node) => closeModal(node);
 
-  function addSelectedIngredient(id) {
-    const element = getIngredientById(id);
-    if (!element) {
-      return;
-    }
-    if (element.type === "bun") {
-      selectedIngredientsDispatcher({
-        type: SET_SELECTED_BUN,
-        data: element,
-      });
-    } else {
-      selectedIngredientsDispatcher({
-        type: ADD_SELECTED_INGRIDIENT,
-        data: element,
-      });
-    }
-  }
-
-  function getIngredientById(id) {
-    let result;
-    result = fullCollection.collection.filter(
-      (ingredient) => ingredient._id === id,
-    )[0];
-
-    return result;
-  }
-
   return (
     <div className={styles.app}>
-      <SelectedCollectionContext.Provider
-        value={{ selectedIngredients, selectedIngredientsDispatcher }}
-      >
-        <ModalContext.Provider value={{ modal, modalStateDispatcher }}>
-          <FullCollectionContext.Provider
-            value={{ fullCollection, fullCollectionDispatcher }}
-          >
-            {modal.isModalOpened && (
-              <Modal title={modal.modalPopupTitle} closeFunc={handleCloseModal}>
-                {modal.modalPopupControl}
-              </Modal>
-            )}
-            <AppHeader />
-            <main className={styles.main}>
-              <div className={styles.burgerBlock}>
-                <BurgerIngredients />
-                <BurgerConstructor />
-              </div>
-            </main>
-          </FullCollectionContext.Provider>
-        </ModalContext.Provider>
-      </SelectedCollectionContext.Provider>
+      {isModalOpened && (
+        <Modal title={modalTitle} closeFunc={handleCloseModal}>
+          {modalControl}
+        </Modal>
+      )}
+      <AppHeader />
+      <main className={styles.main}>
+        <div className={styles.burgerBlock}>
+          <DndProvider backend={HTML5Backend}>
+            <BurgerIngredients />
+            <BurgerConstructor />
+          </DndProvider>
+        </div>
+      </main>
     </div>
   );
 }

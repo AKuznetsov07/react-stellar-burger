@@ -3,37 +3,46 @@ import IngredientDetails from "../../components/ingredient-info/ingredient-info"
 import OrderInfo from "../../components/order-info/order-info";
 
 import {
-  FULL_INGRIDIENTS,
-  ADD_SELECTED_INGRIDIENT,
+  FULL_INGREDIENTS,
+  ADD_SELECTED_INGREDIENT,
   SET_SELECTED_BUN,
   SET_TOTAL_PRICE,
   SET_MODAL_CONTENT,
   SET_MODAL_VIEW_STATE,
-  INGRIDIENT_MODAL_TYPE,
+  INGREDIENT_MODAL_TYPE,
   ORDER_MODAL_TYPE,
+  REMOVE_SELECTED_ITEM,
+  INSERT_SELECTED_INGREDIENT,
+  SET_INSERT_POSITION,
+  UPDATE_POSITION,
+  CLEAR_SELECTION,
+  SET_DRAG_STYLE_TYPE,
 } from "../actions";
 
-export const fullCollectionState = {
+const fullCollectionState = {
   collection: [],
 };
-export const selectedCollectionState = {
+const selectedCollectionState = {
   collection: [],
   bunData: null,
   totalPrice: 0,
+  insertPosition: -1,
 };
 
-export const modalState = {
+const modalState = {
   modalPopupTitle: null,
   modalPopupControl: null,
   isModalOpened: false,
 };
-
-export function modalStateReducer(state = modalState, action) {
+const utilsState = {
+  isDragged: false,
+};
+const modalStateReducer = (state = modalState, action) => {
   switch (action.type) {
     case SET_MODAL_CONTENT: {
       let modalControl;
       switch (action.popupType) {
-        case INGRIDIENT_MODAL_TYPE: {
+        case INGREDIENT_MODAL_TYPE: {
           modalControl = <IngredientDetails ingredientData={action.data} />;
           break;
         }
@@ -57,18 +66,24 @@ export function modalStateReducer(state = modalState, action) {
         isModalOpened: action.isOpened,
       };
     }
+    case UPDATE_POSITION: {
+      return {
+        ...state,
+        isModalOpened: action.isOpened,
+      };
+    }
     default: {
       return state;
     }
   }
-}
+};
 
-export function selectedIngredientsReducer(
+const selectedIngredientsReducer = (
   state = selectedCollectionState,
   action,
-) {
+) => {
   switch (action.type) {
-    case ADD_SELECTED_INGRIDIENT: {
+    case ADD_SELECTED_INGREDIENT: {
       const newElement = { data: action.data, pos: state.collection.length };
       const newCollection = [...state.collection, newElement].sort((a, b) =>
         a.pos > b.pos ? 1 : -1,
@@ -77,6 +92,12 @@ export function selectedIngredientsReducer(
         ...state,
         collection: newCollection,
         totalPrice: state.totalPrice + action.data.price,
+      };
+    }
+    case SET_TOTAL_PRICE: {
+      return {
+        ...state,
+        totalPrice: action.newPrice,
       };
     }
     case SET_SELECTED_BUN: {
@@ -91,21 +112,128 @@ export function selectedIngredientsReducer(
         totalPrice: state.totalPrice + deltaPrice,
       };
     }
-    case SET_TOTAL_PRICE: {
+    case INSERT_SELECTED_INGREDIENT: {
+      let newPos = state.insertPosition;
+      if (newPos > state.collection.length || newPos < 0) {
+        newPos = state.collection.length;
+      }
+      const newElement = { data: action.data, pos: newPos };
+      const firstPart = state.collection.filter((x) => x.pos < newPos);
+      const secondPart = state.collection
+        .filter((x) => x.pos >= newPos)
+        .map((item) => {
+          return { data: item.data, pos: item.pos + 1 };
+        });
+      const newCollection = [...firstPart, newElement, ...secondPart].sort(
+        (a, b) => (a.pos > b.pos ? 1 : -1),
+      );
       return {
         ...state,
-        totalPrice: action.newPrice,
+        collection: newCollection,
+        totalPrice: state.totalPrice + action.data.price,
+        insertPosition: -1,
+      };
+    }
+    case REMOVE_SELECTED_ITEM: {
+      const removedItem = state.collection.filter(
+        (item) => item.pos === action.pos,
+      )[0];
+      const removedItemPrice = removedItem ? removedItem.data.price : 0;
+
+      const firstPart = state.collection.filter((x) => x.pos < action.pos);
+      const secondPart = state.collection
+        .filter((x) => x.pos > action.pos)
+        .map((item) => {
+          return { data: item.data, pos: item.pos - 1 };
+        });
+      const newCollection = [...firstPart, ...secondPart].sort((a, b) =>
+        a.pos > b.pos ? 1 : -1,
+      );
+      return {
+        ...state,
+        totalPrice: state.totalPrice - removedItemPrice,
+        collection: newCollection,
+      };
+    }
+    case SET_INSERT_POSITION: {
+      let newPos = action.newPos;
+      if (state.insertPosition === 0 && action.newPos === -1) {
+        newPos = 0;
+      }
+      return {
+        ...state,
+        insertPosition: newPos,
+      };
+    }
+    case UPDATE_POSITION: {
+      let newPos = state.insertPosition;
+
+      if (newPos < 0 || newPos > state.collection.length) {
+        newPos = state.collection.length;
+      }
+      if (newPos > state.collection.length || newPos === action.data.oldPos) {
+        return { ...state };
+      }
+
+      const newElement = {
+        data: state.collection.filter((x) => x.pos === action.data.oldPos)[0]
+          .data,
+        pos: newPos,
+      };
+      const firstPart = state.collection.filter(
+        (x) => x.pos < action.data.oldPos && x.pos < newPos,
+      );
+      let secondPart = [];
+      let thirdPart = [];
+
+      if (newPos < action.data.oldPos) {
+        secondPart = state.collection
+          .filter((x) => x.pos < action.data.oldPos && x.pos >= newPos)
+          .map((item) => {
+            return { data: item.data, pos: item.pos + 1 };
+          });
+        thirdPart = state.collection.filter(
+          (x) => x.pos > action.data.oldPos,
+        ) /*.map((item) => { return { data: item.data, pos: item.pos - 1 } })*/;
+      } else {
+        secondPart = state.collection
+          .filter((x) => x.pos > action.data.oldPos && x.pos <= newPos)
+          .map((item) => {
+            return { data: item.data, pos: item.pos - 1 };
+          });
+        thirdPart = state.collection.filter(
+          (x) => x.pos > newPos,
+        ) /*.map((item) => { return { data: item.data, pos: item.pos - 1 } })*/;
+      }
+      const newCollection = [
+        ...firstPart,
+        newElement,
+        ...secondPart,
+        ...thirdPart,
+      ].sort((a, b) => (a.pos > b.pos ? 1 : -1));
+      return {
+        ...state,
+        collection: newCollection,
+        insertPosition: -1,
+      };
+    }
+    case CLEAR_SELECTION: {
+      return {
+        collection: [],
+        bunData: null,
+        totalPrice: 0,
+        insertPosition: -1,
       };
     }
     default: {
       return state;
     }
   }
-}
+};
 
-export function fullCollectionReducer(state = fullCollectionState, action) {
+const fullCollectionReducer = (state = fullCollectionState, action) => {
   switch (action.type) {
-    case FULL_INGRIDIENTS: {
+    case FULL_INGREDIENTS: {
       return {
         ...state,
         collection: action.data,
@@ -115,10 +243,24 @@ export function fullCollectionReducer(state = fullCollectionState, action) {
       return state;
     }
   }
-}
+};
 
+const utilsReducer = (state = utilsState, action) => {
+  switch (action.type) {
+    case SET_DRAG_STYLE_TYPE: {
+      return {
+        ...state,
+        isDragged: action.isDragged,
+      };
+    }
+    default: {
+      return state;
+    }
+  }
+};
 export const rootReducer = combineReducers({
   fullIngredients: fullCollectionReducer,
   selectedIngredients: selectedIngredientsReducer,
   modalState: modalStateReducer,
+  utils: utilsReducer,
 });
