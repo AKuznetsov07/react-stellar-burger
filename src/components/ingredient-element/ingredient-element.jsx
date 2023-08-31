@@ -7,18 +7,19 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
 import ingredientPropType from "../../utils/prop-types";
-import { useDrag, useDrop } from "react-dnd";
+import { useDrag } from "react-dnd";
 import {
   SET_MODAL_CONTENT,
   SET_MODAL_VIEW_STATE,
   INGREDIENT_MODAL_TYPE,
+} from "../../services/actions/modal";
+import {
   INSERT_SELECTED_INGREDIENT,
   SET_SELECTED_BUN,
-  SET_DRAG_STYLE_TYPE,
-} from "../../services/actions/";
+} from "../../services/actions/selectedCollection";
+import { SET_DRAG_STYLE_TYPE } from "../../services/actions/utils";
 
 function IngredientElement(props) {
-  const ref = useRef(null);
   const dispatch = useDispatch();
   const elementData = props.elementData;
   const insertType =

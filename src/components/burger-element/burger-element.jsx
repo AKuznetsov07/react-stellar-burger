@@ -11,7 +11,7 @@ import {
   REMOVE_SELECTED_ITEM,
   SET_INSERT_POSITION,
   UPDATE_POSITION,
-} from "../../services/actions/";
+} from "../../services/actions/selectedCollection";
 
 export const BurgerElement = (props) => {
   const ref = useRef(null);

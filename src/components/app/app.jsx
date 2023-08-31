@@ -6,15 +6,9 @@ import Modal from "../modal/modal";
 import React, { useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Api } from "../../utils/Api.js";
-import { apiConfig } from "../../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  FULL_INGREDIENTS,
-  SET_MODAL_VIEW_STATE,
-} from "../../services/actions/";
-
-export const webApi = new Api(apiConfig);
+import { getData } from "../../services/actions/fullCollection";
+import { SET_MODAL_VIEW_STATE } from "../../services/actions/modal";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,22 +20,8 @@ function App() {
   const modalTitle = useSelector((store) => store.modalState.modalPopupTitle);
 
   useEffect(() => {
-    getData();
-  }, []);
-
-  function getData() {
-    webApi
-      .getIngredients()
-      .then((res) => {
-        dispatch({
-          type: FULL_INGREDIENTS,
-          data: res.data,
-        });
-      })
-      .catch((e) => {
-        console.error("Failed to load ingredients data.");
-      });
-  }
+    dispatch(getData());
+  }, [dispatch]);
 
   function closeModal(node) {
     dispatch({

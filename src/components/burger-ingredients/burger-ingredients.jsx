@@ -7,7 +7,6 @@ import IngredientElement from "../ingredient-element/ingredient-element";
 import PropTypes from "prop-types";
 
 function BurgerIngredients(props) {
-  const { handleOpenModal } = props;
   const [isBunBlockVisible, setBunBlockVisibility] = React.useState(true);
   const [isSouceBlockVisible, setSouceBlockVisibility] = React.useState(false);
   const [isMainBlockVisible, setMainBlockVisibility] = React.useState(false);
@@ -105,21 +104,18 @@ function BurgerIngredients(props) {
           <IngredientBlock
             Title="Булки"
             elementType="bun"
-            clickHandler={handleOpenModal}
             wrappedNode={IngredientElement}
             ref={bunBlockRef}
           />
           <IngredientBlock
             Title="Соусы"
             elementType="sauce"
-            clickHandler={handleOpenModal}
             wrappedNode={IngredientElement}
             ref={souceBlockRef}
           />
           <IngredientBlock
             Title="Начинки"
             elementType="main"
-            clickHandler={handleOpenModal}
             wrappedNode={IngredientElement}
             ref={mainBlockRef}
           />

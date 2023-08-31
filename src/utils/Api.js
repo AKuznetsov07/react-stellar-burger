@@ -1,4 +1,5 @@
-export class Api {
+import { apiConfig } from "./constants";
+class Api {
   constructor(options) {
     this._config = options;
   }
@@ -27,3 +28,5 @@ export class Api {
     });
   }
 }
+
+export const webApi = new Api(apiConfig)
