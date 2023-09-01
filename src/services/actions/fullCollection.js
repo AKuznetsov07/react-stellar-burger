@@ -7,7 +7,7 @@ export const GET_INGREDIENTS_SUCCESS = "GET_INGREDIENTS_SUCCESS";
 export const GET_INGREDIENTS_FAILED = "GET_INGREDIENTS_FAILED";
 
 export function getData() {
-  return async function (dispatch) {
+  return function (dispatch) {
     dispatch({ type: GET_INGREDIENTS_REQUEST });
     webApi
       .getIngredients()

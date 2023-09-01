@@ -17,7 +17,7 @@ const selectedCollectionState = {
   bunData: null,
   totalPrice: 0,
   insertPosition: -1,
-  isLoading: false,
+  makingRequest: false,
   hasError: false,
 };
 export const selectedIngredientsReducer = (
@@ -166,20 +166,20 @@ export const selectedIngredientsReducer = (
     case GET_ORDER_REQUEST: {
       return {
         ...state,
-        isLoading: true,
+        makingRequest: true,
       };
     }
     case GET_ORDER_SUCCESS: {
       return {
         ...state,
-        isLoading: false,
+        makingRequest: false,
         hasError: false,
       };
     }
     case GET_ORDER_FAILED: {
       return {
         ...state,
-        isLoading: false,
+        makingRequest: false,
         hasError: true,
       };
     }

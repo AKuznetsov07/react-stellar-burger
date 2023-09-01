@@ -1,8 +1,5 @@
 import {
-  SET_DRAG_STYLE_TYPE,
-  GET_INGREDIENTS_REQUEST,
-  GET_INGREDIENTS_SUCCESS,
-  GET_INGREDIENTS_FAILED,
+  SET_DRAG_STYLE_TYPE
 } from "../actions/utils";
 
 const utilsState = {

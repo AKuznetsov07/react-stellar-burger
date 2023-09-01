@@ -15,7 +15,7 @@ export const GET_ORDER_SUCCESS = "GET_ORDER_SUCCESS";
 export const GET_ORDER_FAILED = "GET_ORDER_FAILED";
 
 export function getData(orderDetails, openModal) {
-  return async function (dispatch) {
+  return function (dispatch) {
     dispatch({ type: GET_ORDER_REQUEST });
     webApi
       .createOrder(orderDetails)
