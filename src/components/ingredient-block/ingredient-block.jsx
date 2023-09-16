@@ -1,22 +1,24 @@
-import React, { useMemo, useContext } from "react";
+import React, { useMemo } from "react";
 import styles from "./ingredient-block.module.css";
 import PropTypes from "prop-types";
-import { FullCollectionContext } from "../../services/appContext";
+import { useSelector } from "react-redux";
 
-function IngredientBlock(props) {
-  const { fullCollection } = useContext(FullCollectionContext);
+const IngredientBlock = React.forwardRef((props, ref) => {
+  const fullIngredientsList = useSelector(
+    (store) => store.fullIngredients.collection,
+  );
   const WrappedComponent = props.wrappedNode;
   const elements = useMemo(
     () =>
-      fullCollection.collection.filter(
+      fullIngredientsList.filter(
         (element) => element.type === props.elementType,
       ),
-    [fullCollection, props.elementType],
+    [fullIngredientsList, props.elementType],
   );
 
   return (
     elements && (
-      <div className={styles.ingredientBlockWrapper}>
+      <div className={styles.ingredientBlockWrapper} ref={ref}>
         <p className="text text_type_main-medium">{props.Title}</p>
         <section className={styles.ingredientBlock}>
           {elements.map((element) => (
@@ -26,7 +28,7 @@ function IngredientBlock(props) {
       </div>
     )
   );
-}
+});
 
 export default IngredientBlock;
 
