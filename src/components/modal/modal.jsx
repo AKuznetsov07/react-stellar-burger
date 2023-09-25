@@ -5,10 +5,10 @@ import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
 
 const modalRoot = document.getElementById("modals");
-const Modal = (props) => {
+const Modal = ({ title, closeFunc, children }) => {
   const containerRef = useRef(null);
 
-  const { title, closeFunc, children } = props;
+  //const { title, closeFunc, children } = props;
 
   function Close() {
     if (closeFunc) closeFunc();
@@ -51,8 +51,7 @@ const ModalBody = (props) => {
           <button
             className={styles.CloseButton}
             type="button"
-            onClick={closeClickHandler}
-          >
+            onClick={closeClickHandler}>
             <CloseIcon type="primary" />
           </button>
         </div>
