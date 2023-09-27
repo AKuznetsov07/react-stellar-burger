@@ -5,7 +5,7 @@ import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burg
 //import BurgerIngredients from "../components/burger-ingredients/burger-ingredients";
 //import Modal from "../components/modal/modal";
 import React, { useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 //import { DndProvider } from "react-dnd";
 //import { HTML5Backend } from "react-dnd-html5-backend";
 //import { useDispatch, useSelector } from "react-redux";
@@ -23,12 +23,13 @@ export function ProfilePage() {
                             <Link className="text text_type_main-large">История заказов</Link>
                             <Link className="text text_type_main-large">Выход</Link>
                         </div>
-                        <p className="pt-20">324</p>
+                        <span className="text text_type_main-default text_color_inactive">В этом разделе вы можете изменить свои персональные данные</span>
                     </div>
+                    {/*<Outlet/>*/}
                     <div className={styles.fieldsColumn}>
-                        <Input placeholder="Имя" extraClass="pt-6"></Input>
-                        <Input placeholder="Логин" extraClass="pt-6"></Input>
-                        <PasswordInput placeholder="Пароль" extraClass="pt-6"></PasswordInput>
+                        <Input icon="EditIcon" placeholder="Имя" extraClass="pt-6"></Input>
+                        <Input icon="EditIcon" placeholder="Логин" extraClass="pt-6"></Input>
+                        <PasswordInput icon="EditIcon" placeholder="Пароль" extraClass="pt-6"></PasswordInput>
                     </div>
                 </form>
             </main>

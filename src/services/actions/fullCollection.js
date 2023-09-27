@@ -1,4 +1,4 @@
-import { webApi } from "../../utils/Api.js";
+import { webApi } from "../../utils/Api/AppApi.js";
 
 export const FULL_INGREDIENTS = "FULL_INGREDIENTS";
 

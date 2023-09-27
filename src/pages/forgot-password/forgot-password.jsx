@@ -5,7 +5,9 @@ import styles from "./forgot-password.module.css";
 //import BurgerIngredients from "../components/burger-ingredients/burger-ingredients";
 //import Modal from "../components/modal/modal";
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { sendResetPasswordMail } from "../../services/actions/auth.js";
 //import { DndProvider } from "react-dnd";
 //import { HTML5Backend } from "react-dnd-html5-backend";
 //import { useDispatch, useSelector } from "react-redux";
@@ -13,10 +15,20 @@ import { Link } from 'react-router-dom';
 //import { SET_MODAL_VIEW_STATE } from "../services/actions/modal";
 
 export function ForgotPasswordPage() {
-    const [value, setValue] = React.useState({ mail: "" })
+    const [value, setValue] = React.useState({ email: "" })
+    const dispatch = useDispatch();
 
+    const navigate = useNavigate();
     const onMailChange = e => {
-        setValue({ ...value, mail: e.target.value })
+        setValue({ ...value, email: e.target.value })
+    }
+
+    const handleSendResetPasswordMailButtonClick = () => {
+        dispatch(sendResetPasswordMail(value.email)).then((res) => {
+            if (res.success) {
+                navigate(`/reset-password`);
+            }
+        })
     }
 
     return (
@@ -24,9 +36,9 @@ export function ForgotPasswordPage() {
             <main className={styles.main}>
                 <form className={styles.forgotPassForm}>
                     <h2>Восстановление пароля</h2>
-                    <EmailInput placeholder="Укажите e-mail" value={value.mail} onChange={onMailChange} extraClass="pt-6" />
-                    <Button extraClass="pt-6">Восстановить</Button>
-                    <p className={"pt-20 " + styles.emptyMargin}> Вспомнили пароль? <Link to='/list'>Войти</Link></p>
+                    <EmailInput placeholder="Укажите e-mail" value={value.email} onChange={onMailChange} extraClass="pt-6" />
+                    <Button extraClass="pt-6" htmlType="button" onClick={handleSendResetPasswordMailButtonClick}>Восстановить</Button>
+                    <p className={"pt-20 " + styles.emptyMargin}> Вспомнили пароль? <Link to='/login'>Войти</Link></p>
                 </form>
             </main>
         </div>

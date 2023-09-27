@@ -5,20 +5,23 @@ import OrderInfo from "./components/order-info/order-info";
 import Modal from "./components/modal/modal";
 import AppHeader from "./components/app-header/app-header";
 import { OnlyAuth, OnlyUnAuth } from "./components/protected-route/protected-route";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { checkUserAuth } from "./services/actions/auth.js";
 
 export default function App() {
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const background = location.state && location.state.background;
 
+    useEffect(() => {
+        dispatch(checkUserAuth());
+    }, []);
     const handleModalClose = () => {
         navigate(-1);
     };
 
-    console.log("location");
-    console.log(location);
-    console.log("location.state");
-    console.log(location.state);
     return (
         
         <>
@@ -26,12 +29,13 @@ export default function App() {
             <Routes location={background || location}>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<OnlyUnAuth component={<LoginPage />} />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="/reset-password" element={<ResetPasswordPage />} />
-                <Route path="/profile" element={<OnlyAuth component={<ProfilePage />} />} />
-                <Route path="/profile/orders" element={<OnlyAuth component={<ProfileOrdersPage />} />}/>
-                <Route path="/profile/orders/:id" element={<OnlyAuth component={<ProfileOrdersIdPage />} />}/>
+                <Route path="/register" element={<OnlyUnAuth component={<RegisterPage />} />} />
+                <Route path="/forgot-password" element={<OnlyUnAuth component={<ForgotPasswordPage />} />}/>
+                    <Route path="/reset-password" element={<OnlyUnAuth component={<ResetPasswordPage />} />}/>
+                <Route path="/profile" element={<OnlyAuth component={<ProfilePage />} />}>
+                    <Route path="/profile/orders" element={<ProfileOrdersPage />} />
+                    <Route path="/profile/orders/:id" element={<ProfileOrdersIdPage />} />
+                </Route>
 
                 <Route path='/ingredients/:id' element={<IngredientDetails />} />
                 <Route path="*" element={<NotFound404 />} />

@@ -1,30 +1,10 @@
-import { apiConfig } from "./constants";
-class Api {
-  constructor(options) {
-    this._config = options;
-  }
-
-  _request(url, options) {
-    return fetch(url, options).then((res) => this._checkResult(res));
-  }
-
-  _checkResult(res) {
-    if (res.ok) {
-      return res.json();
+import { BaseApi } from "./BaseApi";
+export class AuthApi extends BaseApi {
+    constructor(options) {
+        super(options);
     }
-    return Promise.reject(`Exception: ${res.status}`);
-  }
-    /////
-    _refreshToken(){
-        return fetch(`${this._config.baseUrl}/auth/token`, {
-            method: "POST",
-            headers: this._config.headers,
-            body: JSON.stringify({
-                token: localStorage.getItem("refreshToken"),
-            }),
-        }).then((res) => this._checkResult(res));
-    }
-    async _fetchWithRefresh(url, options){
+
+    async _fetchWithRefresh(url, options) {
         try {
             const res = await fetch(url, options);
             return await this._checkResult(res);
@@ -44,35 +24,26 @@ class Api {
             }
         }
     }
-  /////
+    ///auth/login
+    login(emailStr, passwordStr) {
+        console.log("api login");
+        return this._request(`${this._config.baseUrl}/auth/login`, {
+            method: "POST",
+            headers: this._config.headers,
+            body: JSON.stringify({
+                email: emailStr,
+                password: passwordStr
+            }),
+        })
+        //.then(res => {
+        //    localStorage.setItem("refreshToken", res.accessToken);
+        //    localStorage.setItem("accessToken", res.refreshToken);
+        //});
+    }
 
-  getIngredients() {
-      return this._fetchWithRefresh(`${this._config.baseUrl}/ingredients`, {
-      headers: this._config.headers,
-    });
-  }
-  createOrder(orderDetails) {
-    return this._request(`${this._config.baseUrl}/orders`, {
-      method: "POST",
-      headers: this._config.headers,
-      body: JSON.stringify({ ingredients: orderDetails }),
-    });
-  }
-    sendResetPassword(email) {
-        return this._fetchWithRefresh(`${this._config.baseUrl}/password-reset`, {
-            method: "POST",
-            headers: this._config.headers,
-            body: JSON.stringify({ "email": email }),
-        });
-    }
-    sendChangePassword(newPassword, token) {
-        return this._fetchWithRefresh(`${this._config.baseUrl}/password-reset/reset`, {
-            method: "POST",
-            headers: this._config.headers,
-            body: JSON.stringify({ "password": newPassword, "token": token }),
-        });
-    }
+    ///auth/register
     sendRegisterUser(email, password, name) {
+        console.log("api sendRegisterUser");
         return this._fetchWithRefresh(`${this._config.baseUrl}/auth/register`, {
             method: "POST",
             headers: this._config.headers,
@@ -80,26 +51,27 @@ class Api {
                 "email": email,
                 "password": password,
                 "name": name
-            }),
-        }).then(res => {
-            localStorage.setItem("refreshToken", res.accessToken);
-            localStorage.setItem("accessToken", res.refreshToken);
-        });
+            })
+        })
+        //    .then(res => {
+        //    localStorage.setItem("refreshToken", res.accessToken);
+        //    localStorage.setItem("accessToken", res.refreshToken);
+        //});
     }
-    Authtorize(email, password) {
-        return this._fetchWithRefresh(`${this._config.baseUrl}/auth/login`, {
+
+    ///auth/logout
+    logout() {
+        return this._fetchWithRefresh(`${this._config.baseUrl}/auth/logout`, {
             method: "POST",
             headers: this._config.headers,
             body: JSON.stringify({
-                "email": email,
-                "password": password
+                "token": localStorage.getItem('refreshToken')
             }),
-        }).then(res => {
-                localStorage.setItem("refreshToken", res.accessToken);
-                localStorage.setItem("accessToken", res.refreshToken);
-            });
+        });
     }
-    RefreshConnection() {
+
+    ///auth/token
+    refreshConnection() {
         return this._fetchWithRefresh(`${this._config.baseUrl}/auth/token`, {
             method: "POST",
             headers: this._config.headers,
@@ -109,18 +81,18 @@ class Api {
             }),
         });
     }
-    Disconnect() {
-        return this._fetchWithRefresh(`${this._config.baseUrl}/auth/login`, {
+    _refreshToken() {
+        return this._request(`${this._config.baseUrl}/auth/token`, {
             method: "POST",
             headers: this._config.headers,
             body: JSON.stringify({
-                ...this._config.headers,
-                "token": localStorage.getItem('refreshToken')
+                token: localStorage.getItem("refreshToken"),
             }),
-        });
+        }).then((res) => this._checkResult(res));
     }
 
-    GetUser() {
+    ///auth/user
+    getUser() {
         return this._fetchWithRefresh(`${this._config.baseUrl}/auth/user`, {
             method: "GET",
             headers: this._config.headers,
@@ -129,7 +101,7 @@ class Api {
             }),
         });
     }
-    UpdateUser(email, password, name) {
+    updateUser(email, password, name) {
         return this._fetchWithRefresh(`${this._config.baseUrl}/auth/user`, {
             method: "PATCH",
             headers: this._config.headers,
@@ -141,8 +113,26 @@ class Api {
             }),
         });
     }
-}
 
+    ////password-reset
+    sendResetPasswordMail(email) {
+        return this._fetchWithRefresh(`${this._config.baseUrl}/password-reset`, {
+            method: "POST",
+            headers: this._config.headers,
+            body: JSON.stringify({ "email": email }),
+        });
+    }
+
+    ////password-reset/reset
+    sendChangePassword(newPassword, changePassToken) {
+        return this._fetchWithRefresh(`${this._config.baseUrl}/password-reset/reset`, {
+            method: "POST",
+            headers: this._config.headers,
+            body: JSON.stringify({ "password": newPassword, "token": changePassToken }),
+        });
+    }
+
+}
 
 //POST https://norma.nomoreparties.space/api/auth/login - эндпоинт дл€ авторизации.
 //POST https://norma.nomoreparties.space/api/auth/register - эндпоинт дл€ регистрации пользовател€.
@@ -154,6 +144,3 @@ class Api {
 
 //Ќебольшое дополнение к проектной работе - у нас есть страница с детал€ми заказа, чтобы при пр€мом переходе на эту страницу получить данные заказа на сервере есть endpoint:
 //GET https://norma.nomoreparties.space/api/orders/{номер заказа}
-
-
-export const webApi = new Api(apiConfig)
