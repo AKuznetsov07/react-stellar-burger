@@ -82,7 +82,7 @@ function IngredientElement(props) {
     return (
     <Link key={elementData._id} to={`/ingredients/${elementData._id}`}
       state={{ background: location }}
-      className={styles.link}>
+            className={styles.link + " " + styles.clearLink}>
             <li className={styles.ingredientElement} ref={drag}>{/*onClick={openModal}*/}
                 <img src={elementData.image} alt={elementData.name} />
                 <div className={styles.ingredientPriceBlock}>

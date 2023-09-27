@@ -11,7 +11,7 @@ export function NotFound404() {
                     <p>The page you requested does not exist</p>
                     <br />
                     <br />
-                    <p>check the address or try <Link to='/' className={styles.link}>homepage</Link></p>
+                    <p>check the address or try <Link className={styles.clearLink} to='/' className={styles.link}>homepage</Link></p>
                 </div>
             </div>
         </div>

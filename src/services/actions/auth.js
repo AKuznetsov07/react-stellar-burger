@@ -1,5 +1,4 @@
 import { webApi } from "../../utils/Api/AppApi.js";
-//import { useNavigate } from 'react-router-dom';
 
 export const SET_AUTH_CHECKED = "SET_AUTH_CHECKED";
 export const SET_USER = "SET_USER";
@@ -23,15 +22,12 @@ export const getUser = () => {
 };
 
 export const login = (email, password) => {
-    console.log("login");
-    console.log({ email, password });
     return (dispatch) => {
         return webApi.login(email, password).then((res) => {
-            console.log("dispatch then login");
-            console.log(res);
             localStorage.setItem("accessToken", res.accessToken);
             localStorage.setItem("refreshToken", res.refreshToken);
-            dispatch(setUser(res.user));
+            const user = { ...res.user, password: password }
+            dispatch(setUser(user));
             dispatch(setAuthChecked(true));
         });
     };
@@ -39,6 +35,7 @@ export const login = (email, password) => {
 
 export const checkUserAuth = () => {
     return (dispatch) => {
+        console.log(localStorage.getItem("accessToken"))
         if (localStorage.getItem("accessToken")) {
             dispatch(getUser())
                 .catch(() => {
@@ -66,11 +63,8 @@ export const logout = () => {
 
 
 export const registerUser = (email, password, name) => {
-    console.log("registerUser");
     return (dispatch) => {
         return webApi.sendRegisterUser(email, password, name).then((res) => {
-            console.log("dispatch then registerUser");
-            console.log(res);
             localStorage.setItem("accessToken", res.accessToken);
             localStorage.setItem("refreshToken", res.refreshToken);
             dispatch(setUser(res.user));
@@ -79,26 +73,15 @@ export const registerUser = (email, password, name) => {
     };
 };
 
-//const navigate = useNavigate();
 export const sendResetPasswordMail = (email) => {
-    console.log("sendResetPasswordMail");
     return (dispatch) => {
         return webApi.sendResetPasswordMail(email);
     };
 };
 
 export const sendChangePassword = (newPassword, tokenFromMail) => {
-    console.log("sendChangePassword");
-    console.log({ newPassword, tokenFromMail });
     return (dispatch) => {
-        return webApi.sendChangePassword(newPassword, tokenFromMail).then((res) => {
-            console.log("dispatch then sendChangePassword");
-            console.log(res);
-            //localStorage.setItem("accessToken", res.accessToken);
-            //localStorage.setItem("refreshToken", res.refreshToken);
-            //dispatch(setUser(res.user));
-            //dispatch(setAuthChecked(true));
-        });
+        return webApi.sendChangePassword(newPassword, tokenFromMail);
     };
 };
 

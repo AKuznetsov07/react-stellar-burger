@@ -8,7 +8,6 @@ const modalRoot = document.getElementById("modals");
 const Modal = ({ title, closeFunc, children }) => {
   const containerRef = useRef(null);
 
-  //const { title, closeFunc, children } = props;
 
   function Close() {
     if (closeFunc) closeFunc();

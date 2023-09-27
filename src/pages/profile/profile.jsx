@@ -1,37 +1,55 @@
 import styles from "./profile.module.css";
-import AppHeader from "../../components/app-header/app-header";
-import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
-//import BurgerConstructor from "../components/burger-constructor/burger-constructor";
-//import BurgerIngredients from "../components/burger-ingredients/burger-ingredients";
-//import Modal from "../components/modal/modal";
-import React, { useEffect } from "react";
-import { Link, NavLink, Outlet } from 'react-router-dom';
-//import { DndProvider } from "react-dnd";
-//import { HTML5Backend } from "react-dnd-html5-backend";
-//import { useDispatch, useSelector } from "react-redux";
-//import { getData } from "../services/actions/fullCollection";
-//import { SET_MODAL_VIEW_STATE } from "../services/actions/modal";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
+import { Link, NavLink, Navigate, useLocation } from 'react-router-dom';
 
 export function ProfilePage() {
+    const user = useSelector((store) => store.user.user);
+    const [value, setValue] = useState({ email: user.email, password: user.password, name: user.name })
+
+    const onPassChange = e => {
+        setValue({ ...value, password: e.target.value })
+    }
+    const onMailChange = e => {
+        setValue({ ...value, email: e.target.value })
+    }
+    const onNameChange = e => {
+        setValue({ ...value, name: e.target.value })
+    }
+
+    const location = useLocation();
+    const isActive = linkPath => {
+        if (linkPath === location.pathname) {
+
+            return true;
+        }
+
+        return false;
+    }
+    let botOffer = "изменить свои персональные данные";
     return (
         <div className={styles.profile}>
             <main className={styles.main}>
-                <form className={styles.profileForm}>
-                    <div className={styles.fieldsColumn}>
-                        <div className={styles.fieldsColumn}>
-                            <Link to='/profile' className="text text_type_main-large">Профиль</Link>
-                            <Link className="text text_type_main-large">История заказов</Link>
-                            <Link className="text text_type_main-large">Выход</Link>
+                <div className={styles.mainContent}>
+                    <div className={styles.fieldsColumn + " " + styles.navColumn+" mr-15"}>
+                        <div className={styles.navGrid}>
+                            <NavLink to='/profile'
+                                className={"text text_type_main-medium " + (!isActive("/profile") ? styles.clearLink : styles.activeLink) }>Профиль</NavLink>
+                            <NavLink
+                                className={"text text_type_main-medium " + (!isActive("/profile/orders") ? styles.clearLink : styles.activeLink)}>История заказов</NavLink>
+                            <Link className={"text text_type_main-medium " +styles.clearLink}>Выход</Link>
                         </div>
-                        <span className="text text_type_main-default text_color_inactive">В этом разделе вы можете изменить свои персональные данные</span>
+                        <p className={"text text_type_main-default text_color_inactive mt-20 p-0 " + styles.emptyPadding}>В этом разделе вы можете</p>
+                        <p className={"text text_type_main-default text_color_inactive p-0 " + styles.emptyPadding}>{botOffer}</p>
                     </div>
                     {/*<Outlet/>*/}
-                    <div className={styles.fieldsColumn}>
-                        <Input icon="EditIcon" placeholder="Имя" extraClass="pt-6"></Input>
-                        <Input icon="EditIcon" placeholder="Логин" extraClass="pt-6"></Input>
-                        <PasswordInput icon="EditIcon" placeholder="Пароль" extraClass="pt-6"></PasswordInput>
+                    <div className={styles.navGrid + " " + styles.bigGap}>
+                        <Input icon="EditIcon" placeholder="Имя" value={value.name} onChange={onNameChange}></Input>
+                        <Input icon="EditIcon" placeholder="Логин" value={value.email} onChange={onMailChange}></Input>
+                        <PasswordInput icon="EditIcon" value={value.password} onChange={onPassChange} placeholder="Пароль"></PasswordInput>
                     </div>
-                </form>
+                </div>
             </main>
         </div>
     );
