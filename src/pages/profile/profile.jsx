@@ -1,29 +1,15 @@
 import styles from "./profile.module.css";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Input,
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link, NavLink, Navigate, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { logout } from "../../services/actions/auth.js";
 
 export function ProfilePage() {
-  const user = useSelector((store) => store.user.user);
-  const [value, setValue] = useState({
-    email: user.email,
-    password: user.password,
-    name: user.name,
-  });
-
-  const onPassChange = (e) => {
-    setValue({ ...value, password: e.target.value });
-  };
-  const onMailChange = (e) => {
-    setValue({ ...value, email: e.target.value });
-  };
-  const onNameChange = (e) => {
-    setValue({ ...value, name: e.target.value });
-  };
+  const dispatch = useDispatch();
 
   const location = useLocation();
   const isActive = (linkPath) => {
@@ -32,6 +18,10 @@ export function ProfilePage() {
     }
 
     return false;
+  };
+
+  const handleLogoutClick = (evt) => {
+    dispatch(logout());
   };
   let botOffer = "изменить свои персональные данные";
   return (
@@ -62,6 +52,7 @@ export function ProfilePage() {
                 История заказов
               </NavLink>
               <Link
+                onClick={handleLogoutClick}
                 className={"text text_type_main-medium " + styles.clearLink}
               >
                 Выход
@@ -84,26 +75,7 @@ export function ProfilePage() {
               {botOffer}
             </p>
           </div>
-          <div className={styles.navGrid + " " + styles.bigGap}>
-            <Input
-              icon="EditIcon"
-              placeholder="Имя"
-              value={value.name}
-              onChange={onNameChange}
-            ></Input>
-            <Input
-              icon="EditIcon"
-              placeholder="Логин"
-              value={value.email}
-              onChange={onMailChange}
-            ></Input>
-            <PasswordInput
-              icon="EditIcon"
-              value={value.password}
-              onChange={onPassChange}
-              placeholder="Пароль"
-            ></PasswordInput>
-          </div>
+          <Outlet />
         </div>
       </main>
     </div>

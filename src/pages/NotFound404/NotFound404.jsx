@@ -11,8 +11,8 @@ export function NotFound404() {
           <br />
           <br />
           <p>
-            check the address or try{" "}
-            <Link className={styles.clearLink} to="/" className={styles.link}>
+            check the address or try
+            <Link className={styles.clearLink + " " + styles.link} to="/">
               homepage
             </Link>
           </p>

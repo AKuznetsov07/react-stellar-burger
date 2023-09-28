@@ -17,6 +17,7 @@ import {
   NotFound404,
 } from "./pages";
 import IngredientDetails from "./components/ingredient-info/ingredient-info";
+import ProfileEditForm from "./components/profile-edit-form/profile-edit-form";
 import OrderInfo from "./components/order-info/order-info";
 import Modal from "./components/modal/modal";
 import AppHeader from "./components/app-header/app-header";
@@ -36,7 +37,7 @@ export default function App() {
 
   useEffect(() => {
     dispatch(checkUserAuth());
-  }, []);
+  }, [dispatch]);
   const handleModalClose = () => {
     navigate(-1);
   };
@@ -66,8 +67,10 @@ export default function App() {
           path="/profile"
           element={<OnlyAuth component={<ProfilePage />} />}
         >
-          <Route path="/profile/orders" element={<ProfileOrdersPage />} />
-          <Route path="/profile/orders/:id" element={<ProfileOrdersIdPage />} />
+          <Route index element={<ProfileEditForm />} />
+          <Route path="orders" element={<ProfileOrdersPage />}>
+            <Route path=":id" element={<ProfileOrdersIdPage />} />
+          </Route>
         </Route>
 
         <Route path="/ingredients/:id" element={<IngredientDetails />} />

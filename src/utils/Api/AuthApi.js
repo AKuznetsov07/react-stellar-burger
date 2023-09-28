@@ -10,14 +10,14 @@ export class AuthApi extends BaseApi {
       return await this._checkResult(res);
     } catch (err) {
       if (err.message === "jwt expired") {
-        const refreshData = await this._refreshToken(); //��������� �����
+        const refreshData = await this._refreshToken();
         if (!refreshData.success) {
           return Promise.reject(refreshData);
         }
         localStorage.setItem("refreshToken", refreshData.refreshToken);
         localStorage.setItem("accessToken", refreshData.accessToken);
         options.headers.authorization = refreshData.accessToken;
-        const res = await fetch(url, options); //��������� ������
+        const res = await fetch(url, options);
         return await this._checkResult(res);
       } else {
         return Promise.reject(err);
@@ -47,10 +47,6 @@ export class AuthApi extends BaseApi {
         name: name,
       }),
     });
-    //    .then(res => {
-    //    localStorage.setItem("refreshToken", res.accessToken);
-    //    localStorage.setItem("accessToken", res.refreshToken);
-    //});
   }
 
   ///auth/logout
@@ -89,22 +85,20 @@ export class AuthApi extends BaseApi {
   getUser() {
     return this._fetchWithRefresh(`${this._config.baseUrl}/auth/user`, {
       method: "GET",
-      headers: this._config.headers,
-      body: JSON.stringify({
-        token: localStorage.getItem("accessToken"),
-      }),
+      headers: {
+        ...this._config.headers,
+        authorization: localStorage.getItem("accessToken"),
+      },
     });
   }
-  updateUser(email, password, name) {
+  updateUser(user) {
     return this._fetchWithRefresh(`${this._config.baseUrl}/auth/user`, {
       method: "PATCH",
-      headers: this._config.headers,
-      body: JSON.stringify({
-        email: email,
-        password: password,
-        name: name,
-        token: localStorage.getItem("accessToken"),
-      }),
+      headers: {
+        ...this._config.headers,
+        authorization: localStorage.getItem("accessToken"),
+      },
+      body: JSON.stringify(user),
     });
   }
 

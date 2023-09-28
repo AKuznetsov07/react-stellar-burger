@@ -17,9 +17,11 @@ export function ForgotPasswordPage() {
     setValue({ ...value, email: e.target.value });
   };
 
-  const handleSendResetPasswordMailButtonClick = () => {
+  const handleSendResetPasswordMailButtonClick = (evt) => {
+    evt.preventDefault();
     dispatch(sendResetPasswordMail(value.email)).then((res) => {
       if (res.success) {
+        localStorage.setItem("forgotPasswordRedirect", true);
         navigate(`/reset-password`);
       }
     });
@@ -28,7 +30,10 @@ export function ForgotPasswordPage() {
   return (
     <div className={styles.forgotPass}>
       <main className={styles.main}>
-        <form className={styles.forgotPassForm}>
+        <form
+          className={styles.forgotPassForm}
+          onSubmit={handleSendResetPasswordMailButtonClick}
+        >
           <p
             className={
               "text text_type_main-medium " +
@@ -45,11 +50,7 @@ export function ForgotPasswordPage() {
             onChange={onMailChange}
             extraClass="pt-6"
           />
-          <Button
-            extraClass={"mt-6"}
-            htmlType="button"
-            onClick={handleSendResetPasswordMailButtonClick}
-          >
+          <Button extraClass={"mt-6"} htmlType="submit">
             Восстановить
           </Button>
           <p
@@ -58,8 +59,7 @@ export function ForgotPasswordPage() {
               styles.emptyMargin
             }
           >
-            {" "}
-            Вспомнили пароль?{" "}
+            Вспомнили пароль?
             <Link className={styles.clearLink} to="/login">
               Войти
             </Link>

@@ -19,14 +19,15 @@ export function LoginPage() {
     setValue({ ...value, email: e.target.value });
   };
 
-  const handleLoginButtonClick = () => {
+  const handleLoginButtonClick = (evt) => {
+    evt.preventDefault();
     dispatch(login(value.email, value.password));
   };
 
   return (
     <div className={styles.login}>
       <main className={styles.main}>
-        <form className={styles.loginForm}>
+        <form className={styles.loginForm} onSubmit={handleLoginButtonClick}>
           <p
             className={
               "text text_type_main-medium " +
@@ -49,11 +50,7 @@ export function LoginPage() {
             onChange={onPassChange}
             extraClass="pt-6"
           />
-          <Button
-            extraClass={"mt-6 "}
-            htmlType="button"
-            onClick={handleLoginButtonClick}
-          >
+          <Button extraClass={"mt-6 "} htmlType="submit">
             Войти
           </Button>
           <p
@@ -62,8 +59,7 @@ export function LoginPage() {
               styles.emptyMargin
             }
           >
-            {" "}
-            Вы — новый пользователь?{" "}
+            Вы — новый пользователь?
             <Link className={styles.clearLink} to="/register">
               Зарегистрироваться
             </Link>
@@ -74,8 +70,7 @@ export function LoginPage() {
               styles.emptyMargin
             }
           >
-            {" "}
-            Забыли пароль?{" "}
+            Забыли пароль?
             <Link className={styles.clearLink} to="/forgot-password">
               Восстановить пароль
             </Link>

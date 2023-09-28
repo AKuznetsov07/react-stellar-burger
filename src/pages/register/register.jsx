@@ -26,14 +26,18 @@ export function RegisterPage() {
   const onNameChange = (e) => {
     setValue({ ...value, name: e.target.value });
   };
-  const handleRegisterButtonClick = () => {
+  const handleRegisterButtonClick = (evt) => {
+    evt.preventDefault();
     dispatch(registerUser(value.email, value.password, value.name));
   };
 
   return (
     <div className={styles.register}>
       <main className={styles.main}>
-        <form className={styles.registerForm}>
+        <form
+          className={styles.registerForm}
+          onSubmit={handleRegisterButtonClick}
+        >
           <p
             className={
               "text text_type_main-medium " +
@@ -62,11 +66,7 @@ export function RegisterPage() {
             onChange={onPassChange}
             extraClass="pt-6"
           />
-          <Button
-            htmlType="button"
-            extraClass="mt-6"
-            onClick={handleRegisterButtonClick}
-          >
+          <Button htmlType="submit" extraClass="mt-6">
             Зарегистрироваться
           </Button>
           <p
@@ -75,8 +75,7 @@ export function RegisterPage() {
               styles.emptyMargin
             }
           >
-            {" "}
-            Уже зарегестрированы?{" "}
+            Уже зарегестрированы?
             <Link className={styles.clearLink} to="/login">
               Войти
             </Link>
