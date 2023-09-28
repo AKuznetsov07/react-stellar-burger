@@ -8,7 +8,6 @@ const modalRoot = document.getElementById("modals");
 const Modal = ({ title, closeFunc, children }) => {
   const containerRef = useRef(null);
 
-
   function Close() {
     if (closeFunc) closeFunc();
   }
@@ -50,7 +49,8 @@ const ModalBody = (props) => {
           <button
             className={styles.CloseButton}
             type="button"
-            onClick={closeClickHandler}>
+            onClick={closeClickHandler}
+          >
             <CloseIcon type="primary" />
           </button>
         </div>

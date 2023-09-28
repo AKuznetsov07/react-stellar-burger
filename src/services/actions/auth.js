@@ -35,7 +35,6 @@ export const login = (email, password) => {
 
 export const checkUserAuth = () => {
     return (dispatch) => {
-        console.log(localStorage.getItem("accessToken"))
         if (localStorage.getItem("accessToken")) {
             dispatch(getUser())
                 .catch(() => {

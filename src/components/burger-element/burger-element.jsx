@@ -49,7 +49,7 @@ export const BurgerElement = (props) => {
   }, [isHover]);
 
   drag(drop(ref));
-  ///
+
   function RemoveHandler() {
     dispatch({
       type: REMOVE_SELECTED_ITEM,

@@ -1,12 +1,12 @@
 import { apiConfig } from "../constants";
 import { AuthApi } from "./AuthApi";
 class AppApi extends AuthApi {
-    constructor(options) {
-        super(options);
-    }
+  constructor(options) {
+    super(options);
+  }
 
   getIngredients() {
-      return this._fetchWithRefresh(`${this._config.baseUrl}/ingredients`, {
+    return this._fetchWithRefresh(`${this._config.baseUrl}/ingredients`, {
       headers: this._config.headers,
     });
   }
@@ -16,9 +16,7 @@ class AppApi extends AuthApi {
       headers: this._config.headers,
       body: JSON.stringify({ ingredients: orderDetails }),
     });
-    }
-
+  }
 }
 
-
-export const webApi = new AppApi(apiConfig)
+export const webApi = new AppApi(apiConfig);

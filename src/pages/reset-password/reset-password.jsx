@@ -2,14 +2,12 @@ import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burg
 import styles from "./reset-password.module.css";
 import React from "react";
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import { sendChangePassword } from "../../services/actions/auth.js";
 
 export function ResetPasswordPage() {
     const dispatch = useDispatch();
 
-    const navigate = useNavigate();
     const [value, setValue] = React.useState({ pass: "", tokenFromMail: "" })
     const onPassChange = e => {
         setValue({ ...value, pass: e.target.value })
