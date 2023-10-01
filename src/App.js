@@ -21,6 +21,7 @@ import ProfileEditForm from "./components/profile-edit-form/profile-edit-form";
 import OrderInfo from "./components/order-info/order-info";
 import Modal from "./components/modal/modal";
 import AppHeader from "./components/app-header/app-header";
+import CentredControl from "./components/centred-control/centred-control";
 import {
   OnlyAuth,
   OnlyUnAuth,
@@ -28,6 +29,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { checkUserAuth } from "./services/actions/auth.js";
+import { getData } from "./services/actions/fullCollection.js";
 
 export default function App() {
   const location = useLocation();
@@ -36,6 +38,7 @@ export default function App() {
   const background = location.state && location.state.background;
 
   useEffect(() => {
+    dispatch(getData());
     dispatch(checkUserAuth());
   }, [dispatch]);
   const handleModalClose = () => {
@@ -73,7 +76,14 @@ export default function App() {
           </Route>
         </Route>
 
-        <Route path="/ingredients/:id" element={<IngredientDetails />} />
+        <Route
+          path="/ingredients/:id"
+          element={
+            <CentredControl>
+              <IngredientDetails />
+            </CentredControl>
+          }
+        />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
       {background && (
