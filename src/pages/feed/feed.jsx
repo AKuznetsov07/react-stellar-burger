@@ -3,7 +3,6 @@ import FeedList from "../../components/feed-list/feed-list";
 import ScrollingContainer from "../../components/scrolling-container/scrolling-container";
 import React from "react";
 import { useEffect, useMemo } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { useSelector, useDispatch } from "react-redux";
 import FeedElement from "../../components/feed-element/feed-element";
 import {
@@ -17,14 +16,13 @@ export function FeedPage() {
   const total = useSelector((store) => store.wsReducer.total);
   const totalToday = useSelector((store) => store.wsReducer.totalToday);
   const ordersList = useSelector((store) => store.wsReducer.orders);
-
   const [finishedOrders, setFinishedOrders] = React.useState([]);
   const [progressOrders, setProgressOrders] = React.useState([]);
 
   const location = useLocation();
 
   useEffect(() => {
-    dispatch(wsOpenConnection());
+      dispatch(wsOpenConnection("/orders/all"));
     return () => {
       dispatch(wsCloseConnection());
     };
@@ -35,7 +33,7 @@ export function FeedPage() {
       ordersList.map((elementData) => (
         <FeedElement
           linkBase={location.pathname}
-          key={uuidv4()}
+              key={elementData._id}
           orderData={elementData}
         />
       )),
@@ -55,8 +53,10 @@ export function FeedPage() {
         <div className={styles.headerBlock}>
           <p className="text text_type_main-large">Лента заказов</p>
         </div>
-        <div className={styles.centralBlock}>
-          <FeedList>{ordersUIList}</FeedList>
+              <div className={styles.centralBlock}>
+                  <div className={styles.FeedListBlock}>
+                      <FeedList>{ordersUIList}</FeedList>
+                  </div>
           <section className={styles.statSection}>
             <div className={styles.numbersListsBlocks}>
               <div className={styles.numbersListBlock}>
@@ -66,7 +66,7 @@ export function FeedPage() {
                     {finishedOrders.map((elementData) => (
                       <p
                         className={`text text_type_digits-default ${styles.cyanTextColor}`}
-                        key={uuidv4()}
+                            key={elementData._id}
                       >
                         {elementData.number}
                       </p>
@@ -81,7 +81,7 @@ export function FeedPage() {
                     {progressOrders.map((elementData) => (
                       <p
                         className="text text_type_digits-default"
-                        key={uuidv4()}
+                            key={elementData._id}
                       >
                         {elementData.number}
                       </p>

@@ -1,11 +1,10 @@
 import styles from "./feed-element.module.css";
-import React, { useEffect, useRef, useMemo } from "react";
+import React from "react";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import OrderIngridientsList from "../order-ingridient-list/order-ingridient-list";
 import OrderIngridient from "../order-ingridient/order-ingridient";
-import { v4 as uuidv4 } from "uuid";
 import { useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const FeedElement = (props) => {
   const { orderData, linkBase } = props;
@@ -50,7 +49,7 @@ const FeedElement = (props) => {
               className={`z${5 - i}`}
               ingridientImg={fullIngredient.image_mobile}
               iconText={text}
-              key={uuidv4()}
+                key={i}
             />,
           ];
         }

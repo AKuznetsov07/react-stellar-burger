@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styles from "./ingredient-element.module.css";
 import {
   CurrencyIcon,
@@ -16,7 +16,9 @@ import {
 } from "../../services/actions/modal";
 import {
   INSERT_SELECTED_INGREDIENT,
-  SET_SELECTED_BUN,
+    SET_SELECTED_BUN,
+    addIngridient,
+    addBun
 } from "../../services/actions/selectedCollection";
 import { SET_DRAG_STYLE_TYPE } from "../../services/actions/utils";
 
@@ -26,10 +28,10 @@ function IngredientElement(props) {
   const location = useLocation();
 
   const elementData = props.elementData;
-  const insertType =
-    props.elementData.type === "bun"
-      ? SET_SELECTED_BUN
-      : INSERT_SELECTED_INGREDIENT;
+    const insertType =
+        props.elementData.type === "bun"
+            ? addBun : addIngridient;
+      //: INSERT_SELECTED_INGREDIENT;
 
   const [{ isDrag }, drag] = useDrag({
     type: "test",

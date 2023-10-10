@@ -28,7 +28,9 @@
     flex-direction: row;
     justify-content:stretch;
 }
-
+.FeedListBlock {
+    width: calc(50% - 30px);
+}
 .statSection {
     display: flex;
     flex-direction: column;

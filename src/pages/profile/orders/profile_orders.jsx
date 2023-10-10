@@ -1,7 +1,7 @@
 import styles from "./profile_orders.module.css";
 import { useEffect, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, } from "react-redux";
 import FeedElement from "../../../components/feed-element/feed-element";
 import FeedList from "../../../components/feed-list/feed-list";
 import {
@@ -10,13 +10,15 @@ import {
 } from "../../../services/actions/wsActions";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 export function ProfileOrdersControl() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(wsOpenAuthConnection());
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        
+        dispatch(wsOpenAuthConnection("/orders"));
     return () => {
       dispatch(wsCloseConnection());
     };
-  }, [dispatch]);
+    }, [dispatch]);
   let ordersList = useSelector((store) => store.wsReducer.orders);
 
   const location = useLocation();
@@ -28,7 +30,7 @@ export function ProfileOrdersControl() {
     () =>
       ordersList.map((elementData) => (
         <FeedElement
-          key={uuidv4()}
+              key={elementData._id}
           linkBase={location.pathname}
           orderData={elementData}
         />
@@ -41,7 +43,7 @@ export function ProfileOrdersControl() {
     <div className={styles.profileOrder}>
       {!ordersUIListEmpty && <FeedList>{ordersUIList}</FeedList>}
       {ordersUIListEmpty && (
-        <div className={styles.emptyItem} key={uuidv4()}>
+        <div className={styles.emptyItem}>
           <p className="text text_type_main-medium">История отсутствует!</p>
         </div>
       )}

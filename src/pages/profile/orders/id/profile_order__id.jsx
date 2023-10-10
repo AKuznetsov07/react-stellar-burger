@@ -22,7 +22,12 @@ export const ProfileOrdersIdControl = (props) => {
   );
 
   useEffect(() => {
-    webApi.getOrderById(id).then((res) => setOrderData(res.orders[0]));
+      webApi.getOrderById(id).then((res) => setOrderData(res.orders[0]))
+          .catch((e) => {
+              setOrderData(null);
+              console.error("Failed to get order.");
+              console.error(e);
+          });
   }, [id]);
   useEffect(() => {
     if (orderData) {
@@ -64,12 +69,14 @@ export const ProfileOrdersIdControl = (props) => {
           const newPrice = ingrData.price;
           const newTitle = ingrData.name;
           const newImg = ingrData.image_mobile;
-          const newCount = 1;
+            const newCount = 1;
+            const newId = orderElements[i];
           dictionary.set(orderElements[i], {
             price: newPrice,
             title: newTitle,
             img: newImg,
-            count: newCount,
+              count: newCount,
+            id:newId
           });
           resultingPrice += newPrice;
         }

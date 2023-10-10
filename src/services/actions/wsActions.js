@@ -9,20 +9,29 @@ import {
   WS_DISCONNECT,
 } from "../action-types";
 
-export const wsOpenConnection = () => {
+export const wsOpenConnection = (uri) => {
   return {
-    type: WS_CONNECTION_START,
+      type: WS_CONNECTION_START,
+      payload: uri
   };
 };
-export const wsOpenAuthConnection = () => {
+export const wsOpenAuthConnection = (uri) => {
+    console.log('wsOpenAuthConnection')
+    const token = localStorage.getItem("accessToken");
+    //console.log(token)
+    const clearToken = token.replace('Bearer ', '')
+    //console.log(clearToken);
+    console.log(`${uri}?token=${clearToken}`)
   return {
-    type: WS_CONNECTION_AUTH_START,
+      type: WS_CONNECTION_AUTH_START,
+      payload: `${uri}?token=${clearToken}`
   };
 };
 
 export const wsConnectionSuccess = () => {
+
   return {
-    type: WS_CONNECTION_SUCCESS,
+      type: WS_CONNECTION_SUCCESS,
   };
 };
 

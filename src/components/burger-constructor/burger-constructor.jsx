@@ -1,7 +1,6 @@
 import styles from "./burger-constructor.module.css";
 import React, { useEffect } from "react";
 import { useDrop } from "react-dnd";
-import { v4 as uuidv4 } from "uuid";
 import {
   Button,
   CurrencyIcon,
@@ -21,7 +20,6 @@ import { BurgerElement } from "../burger-element/burger-element";
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const [canOrder, setCanOrder] = React.useState(false);
   const [orderModal, setOrderModal] = React.useState({
     form: null,
@@ -37,7 +35,7 @@ const BurgerConstructor = () => {
     (store) => store.selectedIngredients.totalPrice,
   );
 
-  useEffect(() => {
+    useEffect(() => {
     if (bunData || selectedIngredientsList.length > 0) {
       setCanOrder(true);
     } else {
@@ -48,20 +46,23 @@ const BurgerConstructor = () => {
     accept: "test",
     collect: (monitor) => ({}),
     drop(item) {
-      dispatch({
-        type: item.actionType,
-        data: item.elementData,
-      });
+        dispatch(item.actionType(item.elementData),)
     },
   });
 
-  function createOrder() {
-    const orderDetails = [
-      bunData._id,
-      ...selectedIngredientsList.map((x) => x.data._id),
-      bunData._id,
-    ];
-    dispatch(getData(orderDetails, openModal));
+    function createOrder() {
+        if (localStorage.getItem("accessToken")) {
+            const orderDetails = [
+                bunData._id,
+                ...selectedIngredientsList.map((x) => x.data._id),
+                bunData._id,
+            ];
+            dispatch(getData(orderDetails, openModal));
+        }
+        else {
+
+            navigate(`/login`);
+        }
   }
 
   function openModal(data) {
@@ -96,7 +97,7 @@ const BurgerConstructor = () => {
       >
         <ScrollingContainer>
           {selectedIngredientsList.map((elementData) => (
-            <BurgerElement key={uuidv4()} elementModel={elementData} />
+              <BurgerElement key={elementData.data.uniqueId} elementModel={elementData} />
           ))}
         </ScrollingContainer>
       </div>

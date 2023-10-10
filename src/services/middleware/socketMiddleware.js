@@ -16,11 +16,12 @@ export const socketMiddleware = (wsUrl, wsActions) => {
         wsDisconnect,
       } = wsActions;
 
-      const { user } = getState().user;
-
-      if (type === wsInitAuth && user) {
-        socket = new WebSocket(`${wsUrl}/orders?token=${user.token}`);
-      } else if (type === wsInit || (type === wsInitAuth && !user)) {
+        const { user } = getState().user;
+        if (type === wsInitAuth && user) {
+            console.log(`wsInitAuth`)
+            console.log(`${wsUrl}${payload}`)
+            socket = new WebSocket(`${wsUrl}${payload}`);
+        } else if (type === wsInit || (type === wsInitAuth && !user)) {
         socket = new WebSocket(`${wsUrl}/orders/all`);
       }
 
@@ -33,7 +34,9 @@ export const socketMiddleware = (wsUrl, wsActions) => {
           dispatch({ type: onError, payload: event });
         };
 
-        socket.onmessage = (event) => {
+          socket.onmessage = (event) => {
+              console.log('socket.onmessage')
+              console.log(event)
           const { data } = event;
           const parsedData = JSON.parse(data);
           const { success, ...restPayload } = parsedData;
