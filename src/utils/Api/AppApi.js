@@ -17,6 +17,12 @@ class AppApi extends AuthApi {
       body: JSON.stringify({ ingredients: orderDetails }),
     });
   }
+  getOrderById(id) {
+    return this._request(`${this._config.baseUrl}/orders/${id}`, {
+      method: "GET",
+      headers: this._config.headers,
+    });
+  }
 }
 
 export const webApi = new AppApi(apiConfig);

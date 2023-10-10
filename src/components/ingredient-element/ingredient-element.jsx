@@ -73,7 +73,6 @@ function IngredientElement(props) {
       className={styles.link + " " + styles.clearLink}
     >
       <li className={styles.ingredientElement} ref={drag}>
-        {/*onClick={openModal}*/}
         <img src={elementData.image} alt={elementData.name} />
         <div className={styles.ingredientPriceBlock}>
           <p className="text text_type_main-medium">

@@ -11,7 +11,11 @@ import ScrollingContainer from "../scrolling-container/scrolling-container";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getData } from "../../services/actions/selectedCollection";
-
+import {
+  SET_MODAL_CONTENT,
+  SET_MODAL_VIEW_STATE,
+  ORDER_MODAL_TYPE,
+} from "../../services/actions/modal";
 import { BurgerElement } from "../burger-element/burger-element";
 
 const BurgerConstructor = () => {
@@ -19,6 +23,10 @@ const BurgerConstructor = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [canOrder, setCanOrder] = React.useState(false);
+  const [orderModal, setOrderModal] = React.useState({
+    form: null,
+    isCreated: false,
+  });
   const isDragging = useSelector((store) => store.utils.isDragged);
   const selectedIngredientsList = useSelector(
     (store) => store.selectedIngredients.collection,
@@ -57,11 +65,19 @@ const BurgerConstructor = () => {
   }
 
   function openModal(data) {
-    navigate(`/profile/orders/${data}`, { state: { background: location } });
+    dispatch({
+      type: SET_MODAL_CONTENT,
+      popupType: ORDER_MODAL_TYPE,
+      data: data,
+    });
+    dispatch({
+      type: SET_MODAL_VIEW_STATE,
+      isOpened: true,
+    });
   }
-
   return (
     <div className={styles.constructorContainer} ref={drop}>
+      {orderModal.isCreated && orderModal.form}
       {bunData && (
         <div className={styles.BunElement}>
           <ConstructorElement

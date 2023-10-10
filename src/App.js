@@ -12,9 +12,10 @@ import {
   ResetPasswordPage,
   ForgotPasswordPage,
   ProfilePage,
-  ProfileOrdersPage,
-  ProfileOrdersIdPage,
+  ProfileOrdersControl,
+  ProfileOrdersIdControl,
   NotFound404,
+  FeedPage,
 } from "./pages";
 import IngredientDetails from "./components/ingredient-info/ingredient-info";
 import ProfileEditForm from "./components/profile-edit-form/profile-edit-form";
@@ -26,10 +27,11 @@ import {
   OnlyAuth,
   OnlyUnAuth,
 } from "./components/protected-route/protected-route";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkUserAuth } from "./services/actions/auth.js";
 import { getData } from "./services/actions/fullCollection.js";
+import { WS_CONNECTION_START } from "./services/action-types";
 
 export default function App() {
   const location = useLocation();
@@ -71,10 +73,20 @@ export default function App() {
           element={<OnlyAuth component={<ProfilePage />} />}
         >
           <Route index element={<ProfileEditForm />} />
-          <Route path="orders" element={<ProfileOrdersPage />}>
-            <Route path=":id" element={<ProfileOrdersIdPage />} />
+          <Route path="orders" element={<ProfileOrdersControl />}>
+            <Route path=":id" element={<ProfileOrdersIdControl />} />
           </Route>
         </Route>
+
+        <Route path="/feed" element={<FeedPage />} />
+        <Route
+          path="/feed/:id"
+          element={
+            <CentredControl>
+              <ProfileOrdersIdControl />
+            </CentredControl>
+          }
+        />
 
         <Route
           path="/ingredients/:id"
@@ -97,10 +109,18 @@ export default function App() {
             }
           />
           <Route
+            path="/feed/:id"
+            element={
+              <Modal closeFunc={handleModalClose}>
+                <ProfileOrdersIdControl />
+              </Modal>
+            }
+          />
+          <Route
             path="/profile/orders/:id"
             element={
               <Modal closeFunc={handleModalClose}>
-                <OrderInfo />
+                <ProfileOrdersIdControl />
               </Modal>
             }
           />
