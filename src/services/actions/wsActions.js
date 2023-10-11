@@ -16,12 +16,8 @@ export const wsOpenConnection = (uri) => {
   };
 };
 export const wsOpenAuthConnection = (uri) => {
-    console.log('wsOpenAuthConnection')
     const token = localStorage.getItem("accessToken");
-    //console.log(token)
     const clearToken = token.replace('Bearer ', '')
-    //console.log(clearToken);
-    console.log(`${uri}?token=${clearToken}`)
   return {
       type: WS_CONNECTION_AUTH_START,
       payload: `${uri}?token=${clearToken}`

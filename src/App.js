@@ -73,9 +73,8 @@ export default function App() {
           element={<OnlyAuth component={<ProfilePage />} />}
         >
           <Route index element={<ProfileEditForm />} />
-          <Route path="orders" element={<ProfileOrdersControl />}>
-            <Route path=":id" element={<ProfileOrdersIdControl />} />
-          </Route>
+                  <Route path="/profile/orders" element={<ProfileOrdersControl />}/>
+                  <Route path="/profile/orders/:id" element={<ProfileOrdersIdControl />} />
         </Route>
 
         <Route path="/feed" element={<FeedPage />} />

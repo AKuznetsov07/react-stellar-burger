@@ -18,11 +18,9 @@ export const socketMiddleware = (wsUrl, wsActions) => {
 
         const { user } = getState().user;
         if (type === wsInitAuth && user) {
-            console.log(`wsInitAuth`)
-            console.log(`${wsUrl}${payload}`)
             socket = new WebSocket(`${wsUrl}${payload}`);
         } else if (type === wsInit || (type === wsInitAuth && !user)) {
-        socket = new WebSocket(`${wsUrl}/orders/all`);
+            socket = new WebSocket(`${wsUrl}${payload}`);
       }
 
       if (socket) {

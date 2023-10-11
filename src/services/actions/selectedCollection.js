@@ -51,7 +51,14 @@ export const addBun = (item) => {
         }
     }
 }
-
+export const moveIngridient = (item) => {
+    return {
+        type: UPDATE_POSITION,
+        data: {
+            ...item
+        }
+    }
+}
 
 
 function clearOrder(dispatch) {

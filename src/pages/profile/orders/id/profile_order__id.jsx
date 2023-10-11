@@ -6,7 +6,6 @@ import React, { useEffect, useState } from "react";
 import loadingImg from "../../../../images/loading.gif";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import ScrollingContainer from "../../../../components/scrolling-container/scrolling-container";
-import { v4 as uuidv4 } from "uuid";
 import { OrderFullIngridient } from "../../../../components/order-full-ingridient/order-full-ingridient";
 
 export const ProfileOrdersIdControl = (props) => {
@@ -87,7 +86,7 @@ export const ProfileOrdersIdControl = (props) => {
       result = [
         ...result,
         <OrderFullIngridient
-          key={uuidv4()}
+            key={data.id}
           imgSrc={data.img}
           title={data.title}
           priceText={`${data.count}x${data.price}`}
