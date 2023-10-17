@@ -19,7 +19,7 @@ function AppHeader() {
                 Конструктор
               </p>
             </Link>
-            <Link className={styles.appHeaderItem}>
+            <Link to="/feed" className={styles.appHeaderItem}>
               <ListIcon type="secondary" />
               <p className="text text_type_main-default text_color_inactive">
                 Лента заказов

@@ -5,10 +5,13 @@ export class AuthApi extends BaseApi {
   }
 
   async _fetchWithRefresh(url, options) {
-    try {
+      try {
+          options.headers.authorization = localStorage.getItem("accessToken");
       const res = await fetch(url, options);
       return await this._checkResult(res);
-    } catch (err) {
+      } catch (err) {
+          console.log('_fetchWithRefresh err')
+          console.log(err)
       if (err.message === "jwt expired") {
         const refreshData = await this._refreshToken();
         if (!refreshData.success) {
@@ -16,8 +19,8 @@ export class AuthApi extends BaseApi {
         }
         localStorage.setItem("refreshToken", refreshData.refreshToken);
         localStorage.setItem("accessToken", refreshData.accessToken);
-        options.headers.authorization = refreshData.accessToken;
-        const res = await fetch(url, options);
+          options.headers.authorization = refreshData.accessToken;
+          const res = await fetch(url, options);
         return await this._checkResult(res);
       } else {
         return Promise.reject(err);
@@ -78,7 +81,7 @@ export class AuthApi extends BaseApi {
       body: JSON.stringify({
         token: localStorage.getItem("refreshToken"),
       }),
-    }).then((res) => this._checkResult(res));
+    });
   }
 
   ///auth/user

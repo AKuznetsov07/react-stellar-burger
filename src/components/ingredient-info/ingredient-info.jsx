@@ -3,6 +3,7 @@ import React from "react";
 import ingredientPropType from "../../utils/prop-types";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import loadingImg from "../../images/loading.gif";
 
 const IngredientDetails = (props) => {
   const { id } = useParams();
@@ -11,7 +12,6 @@ const IngredientDetails = (props) => {
   ).filter((element) => element._id === id)[0];
 
   const isLoaded = useSelector((store) => store.fullIngredients.isLoaded);
-  const test = useSelector((store) => store.fullIngredients);
   return (
     <>
       {isLoaded && (
@@ -61,6 +61,9 @@ const IngredientDetails = (props) => {
             </div>
           </section>
         </section>
+      )}
+      {!isLoaded && (
+        <img src={loadingImg} alt="Order Done" className={styles.preloadImg} />
       )}
     </>
   );

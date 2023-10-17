@@ -4,7 +4,8 @@ import doneImg from "../../images/done.svg";
 import { useParams } from "react-router-dom";
 
 function OrderInfo(props) {
-  const { id } = useParams();
+  const id = props.id;
+
   return (
     <section className={styles.OrderInfoBlock}>
       <p className="text text_type_digits-large">{id}</p>

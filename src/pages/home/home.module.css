@@ -4,7 +4,6 @@
     height: calc(100% - 128px);
     background-color: #131316;
     color: #f2f2f3;
-    /*justify-content: center;*/
     align-items: stretch;
     box-sizing: border-box;
 }
@@ -14,7 +13,6 @@
     flex-direction: column;
     align-items: center;
     overflow: hidden;
-    /*height: 100%;*/
     height: calc(100% - 128px);
 }
 
@@ -22,10 +20,13 @@
     display: flex;
     max-width: 1240px;
     height: 100%;
-    /*grid-template-columns: 1fr 1fr;*/
     gap: 40px;
     padding: 0;
     overflow: hidden;
     height: 100%;
     flex-direction: row;
+}
+.preloadImg {
+    width: 400px;
+    height: 260px;
 }

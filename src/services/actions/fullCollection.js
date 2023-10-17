@@ -8,7 +8,6 @@ export const GET_INGREDIENTS_SUCCESS = "GET_INGREDIENTS_SUCCESS";
 export const GET_INGREDIENTS_FAILED = "GET_INGREDIENTS_FAILED";
 
 export function getData() {
-  //const selectedIngredient = useSelector((store) => store.fullIngredients.collection);
   return function (dispatch, getState) {
     const { isLoaded } = getState().fullIngredients.isLoaded;
     if (!isLoaded) {

@@ -10,11 +10,18 @@ class AppApi extends AuthApi {
       headers: this._config.headers,
     });
   }
-  createOrder(orderDetails) {
-    return this._request(`${this._config.baseUrl}/orders`, {
+    createOrder(orderDetails) {
+        console.log('createOrder')
+      return this._fetchWithRefresh(`${this._config.baseUrl}/orders`, {
       method: "POST",
       headers: this._config.headers,
       body: JSON.stringify({ ingredients: orderDetails }),
+    });
+  }
+  getOrderById(id) {
+    return this._request(`${this._config.baseUrl}/orders/${id}`, {
+      method: "GET",
+      headers: this._config.headers,
     });
   }
 }

@@ -11,6 +11,9 @@ import { logout } from "../../services/actions/auth.js";
 export function ProfilePage() {
   const dispatch = useDispatch();
 
+    const profilePath = "/profile";
+    const profileOrdersPath = "/profile/orders";
+
   const location = useLocation();
   const isActive = (linkPath) => {
     if (linkPath === location.pathname) {
@@ -20,10 +23,16 @@ export function ProfilePage() {
     return false;
   };
 
+    let botOffer = "";
+    if (location.pathname === profilePath) {
+        botOffer = "изменить свои персональные данные"
+    } else if (location.pathname === profileOrdersPath) {
+        botOffer = "просмотреть свою историю заказов"
+    }
+
   const handleLogoutClick = (evt) => {
     dispatch(logout());
   };
-  let botOffer = "изменить свои персональные данные";
   return (
     <div className={styles.profile}>
       <main className={styles.main}>
@@ -33,18 +42,19 @@ export function ProfilePage() {
           >
             <div className={styles.navGrid}>
               <NavLink
-                to="/profile"
+                              to={profilePath }
                 className={
                   "text text_type_main-medium " +
-                  (!isActive("/profile") ? styles.clearLink : styles.activeLink)
+                    (!isActive(profilePath) ? styles.clearLink : styles.activeLink)
                 }
               >
                 Профиль
               </NavLink>
-              <NavLink
+                          <NavLink
+                              to={profileOrdersPath }
                 className={
                   "text text_type_main-medium " +
-                  (!isActive("/profile/orders")
+                    (!isActive(profileOrdersPath)
                     ? styles.clearLink
                     : styles.activeLink)
                 }

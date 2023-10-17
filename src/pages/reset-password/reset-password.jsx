@@ -29,12 +29,9 @@ export function ResetPasswordPage() {
   };
 
   if (!localStorage.getItem("forgotPasswordRedirect")) {
-    //navigate(`/login`);
     return <Navigate to="/login" />;
   }
-  //else {
-  //    localStorage.removeItem("forgotPasswordRedirect");
-  //}
+
   return (
     <div className={styles.resetPass}>
       <main className={styles.main}>
