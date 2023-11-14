@@ -17,10 +17,9 @@ export type AppActions =
 
 
 export type AppState = ReturnType<typeof rootReducer>;
-//export type RootState = ReturnType<typeof store.getState>;
 
 
-export type AppDispatch = ThunkDispatch<Action<any>, RootState, AppActions>;// | typeof store.dispatch;
+export type AppDispatch = ThunkDispatch<Action<any>, RootState, AppActions>;
 export type RootState = ReturnType<typeof store.getState>;
 
 

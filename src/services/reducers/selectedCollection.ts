@@ -34,9 +34,6 @@ export const selectedIngredientsReducer = (
   state = selectedCollectionState,
     action: TSelectedCollectionActions,
 ): TSelectedCollectionStateType => {
-    //console.log("selectedIngredientsReducer");
-
-    //console.log(action);
     switch (action.type) {
     case ADD_SELECTED_INGREDIENT: {
             const newElement: TSelectedIngredientPropType = { ...action.data, pos: state.collection.length };
@@ -56,8 +53,7 @@ export const selectedIngredientsReducer = (
       };
     }
         case SET_SELECTED_BUN: {
-            //console.log(SET_SELECTED_BUN)
-            //console.log(action)
+
       let oldBunPrice = 0;
       if (state.bunData) {
         oldBunPrice = 2 * state.bunData.price;
@@ -70,28 +66,21 @@ export const selectedIngredientsReducer = (
       };
     }
         case INSERT_SELECTED_INGREDIENT: {
-            //console.log(INSERT_SELECTED_INGREDIENT)
-            //console.log(action)
       let newPos = state.insertPosition;
       if (newPos > state.collection.length || newPos < 0) {
         newPos = state.collection.length;
             }
-
-            //console.log("newElement");
-            //console.log(action);
             const newElement: TSelectedIngredientPropType = { item: action.data.data, pos: newPos };
       const firstPart = state.collection.filter((x) => x.pos < newPos);
       const secondPart = state.collection
         .filter((x) => x.pos >= newPos)
           .map((item) => {
               const result: TSelectedIngredientPropType = { ...item, pos: item.pos + 1 };
-              return result;//{ data: item.item, pos: item.pos + 1 }
+              return result;
         });
             const newCollection:Array<TSelectedIngredientPropType> = [...firstPart, newElement, ...secondPart].sort(
         (a, b) => (a.pos > b.pos ? 1 : -1),
             );
-            //console.log("newCollection");
-            //console.log(newCollection);
       return {
         ...state,
           collection: newCollection,
@@ -110,7 +99,7 @@ export const selectedIngredientsReducer = (
         .filter((x) => x.pos > action.pos)
           .map((item) => {
               const result: TSelectedIngredientPropType = { ...item, pos: item.pos + 1 };
-              return result;//{ data: item.item, pos: item.pos - 1 };
+              return result;
         });
             const newCollection: Array<TSelectedIngredientPropType> = [...firstPart, ...secondPart].sort((a, b) =>
         a.pos > b.pos ? 1 : -1,
@@ -141,22 +130,12 @@ export const selectedIngredientsReducer = (
             }
 
       let newPos = state.insertPosition;
-            //console.log(UPDATE_POSITION);
-            //console.log(state);
-            //console.log(action);
       if (newPos < 0 || newPos > state.collection.length) {
         newPos = state.collection.length;
       }
             if (newPos > state.collection.length || newPos === oldPos) {
                 return { ...state };
             }
-
-            const search = state.collection.filter((x) => x.pos === oldPos);
-            console.log(action.data)
-            console.log(search)
-            console.log(state.collection)
-
-
             const newElement: TSelectedIngredientPropType = {
                 item: { ...state.collection.filter((x) => x.pos === oldPos)[0].item },
         pos: newPos,
@@ -173,7 +152,6 @@ export const selectedIngredientsReducer = (
             .map((item) => {
                 const result: TSelectedIngredientPropType = { item: item.item, pos: item.pos + 1 };
                 return result;
-              //return { data: item.item, pos: item.pos + 1 };
           });
                 thirdPart = state.collection.filter((x) => x.pos > oldPos);
       } else {
@@ -182,7 +160,6 @@ export const selectedIngredientsReducer = (
             .map((item) => {
                 const result: TSelectedIngredientPropType = { item: item.item, pos: item.pos - 1 };
                 return result;
-              //return { data: item.item, pos: item.pos - 1 };
           });
         thirdPart = state.collection.filter((x) => x.pos > newPos);
       }
@@ -199,7 +176,6 @@ export const selectedIngredientsReducer = (
       };
     }
         case CLEAR_SELECTION: {
-            console.log(CLEAR_SELECTION)
       return {
         collection : [],
         bunData: null,

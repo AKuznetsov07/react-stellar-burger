@@ -1,6 +1,4 @@
-//import { IUpdatePositionAction } from "../actions/selectedCollection";
 export { }
-//import { INSERT_SELECTED_INGREDIENT, SET_SELECTED_BUN } from "../actions/selectedCollection";
 
 export type TIngredientPropType = {
     _id: string;
@@ -39,7 +37,7 @@ export type TOrderPropType =
     };
 export type TApiConfigPropType = {
     baseUrl: string,
-    headers: Headers//{ "Content-Type": string },
+    headers: Headers,
 };
 export type TOrderElementDataPropType = {
 
@@ -55,21 +53,7 @@ export type TUserDataType = {
     password?: string;
     name: string;
 }
-//export type dragItem = {
-//    uniqueId?: string;
-//    pos: number;
-//    data: TIngredientPropType;
-//    //data: {
-//    //    uniqueId?: string;
-//    //    elementData:;
-//    //    actionType: ;// insertType;
-//    //};
-//}
-//export type TDragItemTypeOld = {
-//    elementData: TDragItemDataType,
-//    actionType: (arg0: TIngredientPropType | TSelectedIngredientPropType | TDragItemDataType) => any,
-//}
-/////
+
 export type TDragItemType = {
     dragItem: TDragItemDataType,
     actionType: (arg0: TDragItemDataType) => any,
@@ -80,7 +64,5 @@ export type TDragItemDataType = {
     data: TIngredientPropType & { uniqueId: string | null },
 }
 
-//    readonly type: typeof INSERT_SELECTED_INGREDIENT;
-//data: TSelectedIngredientPropType;
 
 export type TAuthPromiseResultType = { success: boolean, message: string }

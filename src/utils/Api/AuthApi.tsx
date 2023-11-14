@@ -8,7 +8,7 @@ export class AuthApi extends BaseApi {
     async _fetchWithRefresh(url: RequestInfo, options: RequestInit & { headers?: Headers} | undefined) {
         try {
             const authValue: string = localStorage.getItem("accessToken") ? localStorage.getItem("accessToken") as string : ""; 
-            options?.headers?.set("Authorization", authValue); ///.Authorization = localStorage.getItem("accessToken");//
+            options?.headers?.set("Authorization", authValue);
             const res = await fetch(url, options);
             return await this._checkResult(res);
         } catch (err: unknown) {
@@ -89,20 +89,11 @@ export class AuthApi extends BaseApi {
 
   ///auth/user
     getUser() {
-        //let newToken = "";
-        //if (localStorage.getItem("accessToken")) {
-        //    newToken = localStorage.getItem("accessToken")?.toString();
-        //}
-        //const newToken = localStorage.getItem("accessToken") ? localStorage.getItem("accessToken") : "";
         const newToken = (localStorage.getItem("accessToken")||'').toString()
         this.Config.headers.set("authorization", newToken)
       return this._fetchWithRefresh(`${this.Config.baseUrl}/auth/user`, {
       method: "GET",
         headers: this.Config.headers
-      //    {
-      //    ...this.Config.headers,
-      //  authorization: localStorage.getItem("accessToken"),
-      //},
     });
   }
     updateUser(user: TUserDataType|null) {

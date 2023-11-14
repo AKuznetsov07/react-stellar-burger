@@ -1,7 +1,7 @@
 import { webApi } from "../../utils/Api/AppApi";
 import { v4 as uuidv4 } from "uuid";
 import { AppDispatch } from "../storage/index";
-import { TDragItemDataType, TIngredientPropType, TSelectedIngredientPropType, TDragItemType } from "../custom-types/custom-types";
+import { TDragItemDataType, TIngredientPropType, TSelectedIngredientPropType } from "../custom-types/custom-types";
 
 export const SET_SELECTED_INGREDIENTS = "SET_SELECTED_INGREDIENTS";
 export const ADD_SELECTED_INGREDIENT = "ADD_SELECTED_INGREDIENT";
@@ -27,7 +27,7 @@ export interface IAddSelectedIngredientAction {
 }
 export interface IInsertSelectedIngredientAction {
     readonly type: typeof INSERT_SELECTED_INGREDIENT;
-    data: TDragItemDataType;// TIngredientPropType & { uniqueId: string | null };
+    data: TDragItemDataType;
 }
 export interface ISetSelectedBunAction {
     readonly type: typeof SET_SELECTED_BUN;
@@ -51,11 +51,7 @@ export interface IClearSelectionAction {
 }
 export interface IUpdatePositionAction {
     readonly type: typeof UPDATE_POSITION;
-    data: TDragItemDataType
-    //data: {
-    //    item: TIngredientPropType,
-    //    oldPos: number
-    //};
+    data: TDragItemDataType;
 }
 export interface IGetOrderRequestAction {
     readonly type: typeof GET_ORDER_REQUEST;
@@ -98,10 +94,6 @@ export const addSelectedIngredientAction = (item: TSelectedIngredientPropType): 
 export const insertSelectedIngredientAction = (arg0: TDragItemDataType): IInsertSelectedIngredientAction => ({
     type: INSERT_SELECTED_INGREDIENT,
     data: arg0
-    //data: {
-    //    ...itemData.data
-        
-    //}
 });
 
 export const setSelectedBunAction = (arg0: TDragItemDataType): ISetSelectedBunAction => ({
@@ -109,7 +101,7 @@ export const setSelectedBunAction = (arg0: TDragItemDataType): ISetSelectedBunAc
     data: arg0.data
 });
 
-export const updatePositionAction = (item: TDragItemDataType /*{ item: TIngredientPropType, oldPos: number}*/): IUpdatePositionAction => ({
+export const updatePositionAction = (item: TDragItemDataType ): IUpdatePositionAction => ({
     type: UPDATE_POSITION,
     data: item
 });
@@ -149,7 +141,6 @@ export function getData(orderDetails:Array<string>, openModal:(arg0: number)=>vo
           dispatch(getOrderSuccesAction());
       })
         .then(() => {
-            console.log("clear called")
             dispatch(clearSelectionAction())
         })
       .catch((e) => {
@@ -159,36 +150,3 @@ export function getData(orderDetails:Array<string>, openModal:(arg0: number)=>vo
       });
   };
 }
-//export const addIngridient = (item: dragItem) => {
-//    return {
-//        type: INSERT_SELECTED_INGREDIENT,
-//        data: {
-//            ...item,
-//            uniqueId: uuidv4()
-//        }
-//    }
-//}
-//export const addBun = (item: dragItem) => {
-//    return {
-//        type: SET_SELECTED_BUN,
-//        data: {
-//            ...item,
-//            uniqueId: uuidv4()
-//        }
-//    }
-//}
-//export const moveIngridient = (item: dragItem) => {
-//    return {
-//        type: UPDATE_POSITION,
-//        data: {
-//            ...item
-//        }
-//    }
-//}
-
-
-//function clearOrder(dispatch: AppDispatch) {
-//  dispatch({
-//    type: CLEAR_SELECTION,
-//  });
-//}

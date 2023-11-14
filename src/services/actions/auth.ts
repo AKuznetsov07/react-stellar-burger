@@ -1,7 +1,5 @@
-import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { webApi } from "../../utils/Api/AppApi";
-import { AppDispatch, AppThunk, RootState, AppActions } from "../storage/index";
-import { Action } from "redux";
+import { AppDispatch, AppThunk } from "../storage/index";
 import { TAuthPromiseResultType, TUserDataType } from "../custom-types/custom-types";
 
 export const SET_AUTH_CHECKED = "SET_AUTH_CHECKED";
@@ -19,10 +17,7 @@ export const setAuthChecked = (value: boolean): ISetAuthCheckedAction => ({
     type: SET_AUTH_CHECKED,
     payload: value,
 });
-//export const setAuthChecked = (value: boolean) => ({
-//  type: SET_AUTH_CHECKED,
-//  payload: value,
-//});
+
 
 export interface ISetUserAction {
     readonly type: typeof SET_USER;
@@ -32,10 +27,7 @@ export const setUser = (user: TUserDataType|null): ISetUserAction => ({
   type: SET_USER,
   payload: user,
 });
-//export const setUser = (user) => ({
-//    type: SET_USER,
-//    payload: user,
-//});
+
 export const getUser = () => {
     return (dispatch: AppDispatch) => {
     return webApi.getUser().then((res) => {
@@ -47,29 +39,7 @@ export const getUser = () => {
         });
   };
 };
-//export const getUser: AppThunk = () => (dispatch: AppDispatch) => {
-//    return (dispatch: (arg0: ISetUserAction) => void) => {
-//    return webApi.getUser().then((res) => {
-//      dispatch(setUser(res.user));
-//    })
-//        .catch((e) => {
-//            console.error("Failed to get user.");
-//            console.error(e);
-//        });
-//  };
-//};
 
-//export const getUser = () => {
-//  return (dispatch) => {
-//    return webApi.getUser().then((res) => {
-//      dispatch(setUser(res.user));
-//    })
-//        .catch((e) => {
-//            console.error("Failed to get user.");
-//            console.error(e);
-//        });
-//  };
-//};
 export const login = (email: string, password: string) => {
     return (dispatch: AppDispatch) => {
     return webApi.login(email, password).then((res) => {
@@ -86,38 +56,6 @@ export const login = (email: string, password: string) => {
         });
   };
 };
-//export const login: AppThunk = (email: string, password: string) => (dispatch: AppDispatch) => {
-//    return (dispatch: (arg0: ISetAuthCheckedAction | ISetUserAction) => void) => {
-//        return webApi.login(email, password).then((res) => {
-//            localStorage.setItem("accessToken", res.accessToken);
-//            localStorage.setItem("refreshToken", res.refreshToken);
-//            const user = { ...res.user, password: password };
-//            dispatch(setUser(user));
-//            dispatch(setAuthChecked(true));
-//        })
-//            .catch((e) => {
-//                dispatch(setAuthChecked(true));
-//                console.error("Failed to login.");
-//                console.error(e);
-//            });
-//    };
-//};
-//export const login = (email: string, password: string) => {
-//  return (dispatch) => {
-//    return webApi.login(email, password).then((res) => {
-//      localStorage.setItem("accessToken", res.accessToken);
-//      localStorage.setItem("refreshToken", res.refreshToken);
-//      const user = { ...res.user, password: password };
-//      dispatch(setUser(user));
-//      dispatch(setAuthChecked(true));
-//    })
-//        .catch((e) => {
-//            dispatch(setAuthChecked(true));
-//            console.error("Failed to login.");
-//            console.error(e);
-//        });
-//  };
-//};ThunkDispatch<Action<any>, RootState, AppActions>
 
 export const checkUserAuth: AppThunk = () => {
     return (dispatch: AppDispatch) => {
@@ -144,82 +82,6 @@ export const checkUserAuth: AppThunk = () => {
         }
     };
 };
-
-//export const checkUserAuth = () => {
-//    return (dispatch: ThunkAction<void, Action<any>, RootState, AppActions>) => {
-//    if (localStorage.getItem("accessToken")) {
-//      dispatch(getUser())
-//          .catch((e: unknown) => {
-//              if (e instanceof Error) {
-//                  localStorage.removeItem("accessToken");
-//                  localStorage.removeItem("refreshToken");
-//                  dispatch(setUser(null));
-//              }
-
-//        })
-//          .catch((e: unknown) => {
-
-//              if (e instanceof Error) {
-//                  console.error("Failed to check auth.");
-//                  console.error(e);
-//              }
-//          })
-//        .finally(() => dispatch(setAuthChecked(true)));
-//    } else {
-//      dispatch(setAuthChecked(true));
-//    }
-//  };
-//};
-//export const checkUserAuth: AppThunk = () => (dispatch: AppDispatch) => {
-//    return (dispatch: (arg0: ISetAuthCheckedAction | ISetUserAction) => Promise<any>) => {
-//    if (localStorage.getItem("accessToken")) {
-//      dispatch(getUser())
-//          .catch((e: unknown) => {
-//              if (e instanceof Error) {
-//                  localStorage.removeItem("accessToken");
-//                  localStorage.removeItem("refreshToken");
-//                  dispatch(setUser(null));
-//              }
-
-//        })
-//          .catch((e: unknown) => {
-
-//              if (e instanceof Error) {
-//                  console.error("Failed to check auth.");
-//                  console.error(e);
-//              }
-//          })
-//        .finally(() => dispatch(setAuthChecked(true)));
-//    } else {
-//      dispatch(setAuthChecked(true));
-//    }
-//  };
-//};
-//export const checkUserAuth = () => {
-//  return (dispatch) => {
-//    if (localStorage.getItem("accessToken")) {
-//      dispatch(getUser())
-//          .catch((e: unknown) => {
-//              if (e instanceof Error) {
-//                  localStorage.removeItem("accessToken");
-//                  localStorage.removeItem("refreshToken");
-//                  dispatch(setUser(null));
-//              }
-
-//        })
-//          .catch((e: unknown) => {
-
-//              if (e instanceof Error) {
-//                  console.error("Failed to check auth.");
-//                  console.error(e);
-//              }
-//          })
-//        .finally(() => dispatch(setAuthChecked(true)));
-//    } else {
-//      dispatch(setAuthChecked(true));
-//    }
-//  };
-//};
 
 export const logout = () => {
     return (dispatch:AppDispatch) => {
@@ -263,14 +125,6 @@ export const updateUser = (user: TUserDataType | null) => {
 };
 
 export const sendResetPasswordMail = (email: string) => {
-  //  return (dispatch: AppDispatch) => {
-  //    return webApi.sendResetPasswordMail(email)
-  //        .catch<TAuthPromiseResultType>((e) => {
-  //            console.error("Failed to send reset password mail.");
-  //            console.error(e);
-  //            return { success: false, message: e }
-  //        });
-  //};
 
     return webApi.sendResetPasswordMail(email)
         .catch<TAuthPromiseResultType>((e) => {

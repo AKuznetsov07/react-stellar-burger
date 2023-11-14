@@ -1,6 +1,6 @@
-import { FunctionComponent, ReactElement } from "react";
-import { IngredientDetails, TIngredientDetailsProps } from "../../components/ingredient-info/ingredient-info";
-import { OrderInfo, TOrderInfoProps } from "../../components/order-info/order-info";
+import { ReactElement } from "react";
+import { IngredientDetails } from "../../components/ingredient-info/ingredient-info";
+import { OrderInfo } from "../../components/order-info/order-info";
 import {
   SET_MODAL_CONTENT,
   SET_MODAL_VIEW_STATE,
@@ -26,11 +26,11 @@ export const modalStateReducer = (state = modalState, action: TModalActions): TM
       let modalControl;
       switch (action.popupType) {
         case INGREDIENT_MODAL_TYPE: {
-              modalControl = IngredientDetails({});//<IngredientDetails/>;
+              modalControl = IngredientDetails({});
           break;
         }
         case ORDER_MODAL_TYPE: {
-              modalControl = OrderInfo({ id: action.data });// <OrderInfo id={action.data} />;
+              modalControl = OrderInfo({ id: action.data });
           break;
         }
         default: {

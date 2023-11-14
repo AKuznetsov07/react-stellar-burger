@@ -1,5 +1,4 @@
 import { webApi } from "../../utils/Api/AppApi";
-import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../storage/index";
 import { TIngredientPropType } from "../custom-types/custom-types";
 
@@ -48,17 +47,12 @@ export function getData() {
     return function (dispatch: AppDispatch, getState: () => RootState) {
     const isLoaded  = getState().fullIngredients.isLoaded;
     if (!isLoaded) {
-        //dispatch({ type: GET_INGREDIENTS_REQUEST });
         dispatch(getIngredientsRequestAction());
       webApi
         .getIngredients()
         .then((res) => {
             dispatch({ type: GET_INGREDIENTS_SUCCESS });
             dispatch(setFullIngredientsAction(res.data))
-          //dispatch({
-          //  type: FULL_INGREDIENTS,
-          //  data: res.data,
-          //});
         })
         .catch((e) => {
           dispatch({ type: GET_INGREDIENTS_FAILED });

@@ -1,5 +1,4 @@
 import {
-  BrowserRouter,
   Routes,
   Route,
   useLocation,
@@ -26,7 +25,6 @@ import {
   OnlyAuth,
   OnlyUnAuth,
 } from "./components/protected-route/protected-route";
-//import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { checkUserAuth } from "./services/actions/auth";
 import { getData } from "./services/actions/fullCollection";
