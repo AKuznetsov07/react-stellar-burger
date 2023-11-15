@@ -2,6 +2,7 @@ import { webApi } from "../../utils/Api/AppApi";
 import { v4 as uuidv4 } from "uuid";
 import { AppDispatch } from "../storage/index";
 import { TDragItemDataType, TIngredientPropType, TSelectedIngredientPropType } from "../custom-types/custom-types";
+import { setModalViewStateAction } from "./modal";
 
 export const SET_SELECTED_INGREDIENTS = "SET_SELECTED_INGREDIENTS";
 export const ADD_SELECTED_INGREDIENT = "ADD_SELECTED_INGREDIENT";
@@ -133,6 +134,7 @@ export const getOrderFailedAction = (): IGetOrderFailedAction => ({
 
 export function getData(orderDetails:Array<string>, openModal:(arg0: number)=>void) {
     return function (dispatch: AppDispatch) {
+        dispatch(setModalViewStateAction(true));
         dispatch(getOrderRequestAction());
     webApi
       .createOrder(orderDetails)

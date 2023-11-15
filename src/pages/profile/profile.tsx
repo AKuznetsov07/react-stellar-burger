@@ -4,11 +4,7 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { logout } from "../../services/actions/auth";
 import { useDispatch } from "../../services/storage/hooks";
 
-
-type TProfilePageProps = {
-};
-
-export const ProfilePage: FunctionComponent<TProfilePageProps> = () => {
+export const ProfilePage: FunctionComponent = () => {
     const dispatch = useDispatch();
 
     const profilePath = "/profile";

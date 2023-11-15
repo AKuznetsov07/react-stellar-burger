@@ -10,11 +10,9 @@ import {
 import { registerUser } from "../../services/actions/auth";
 import { useDispatch } from "../../services/storage/hooks";
 
-type TRegisterPageProps = {
-};
-
-export const RegisterPage: FunctionComponent<TRegisterPageProps> = () => {
+export const RegisterPage: FunctionComponent = () => {
     const dispatch = useDispatch();
+    //const { values, handleChange, setValues } = useForm({});
     const [value, setValue] = React.useState({
         email: "",
         password: "",

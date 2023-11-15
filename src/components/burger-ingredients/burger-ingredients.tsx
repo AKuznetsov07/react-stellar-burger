@@ -5,10 +5,7 @@ import { ScrollingContainer } from "../scrolling-container/scrolling-container";
 import { IngredientBlock } from "../ingredient-block/ingredient-block";
 import { IngredientElement } from "../ingredient-element/ingredient-element";
 
-type TBurgerIngredientsProps = {
-};
-
-export const BurgerIngredients: FunctionComponent<TBurgerIngredientsProps> = ({...props }) => {
+export const BurgerIngredients: FunctionComponent = ({...props }) => {
     const [isBunBlockVisible, setBunBlockVisibility] = React.useState(true);
     const [isSouceBlockVisible, setSouceBlockVisibility] = React.useState(false);
     const [isMainBlockVisible, setMainBlockVisibility] = React.useState(false);

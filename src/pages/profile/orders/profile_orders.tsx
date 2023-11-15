@@ -9,10 +9,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "../../../services/storage/hooks";
 
-type TProfileOrdersControlProps = {
-};
-
-export const ProfileOrdersControl: FunctionComponent<TProfileOrdersControlProps> = () => {
+export const ProfileOrdersControl: FunctionComponent = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {

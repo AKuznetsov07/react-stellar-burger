@@ -12,14 +12,12 @@ import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "../../services/storage/hooks";
 import { TOrderPropType } from "../../services/custom-types/custom-types";
 
-type TFeedPageProps = {
-};
 
-export const FeedPage: FunctionComponent<TFeedPageProps> = () => {
+export const FeedPage: FunctionComponent = () => {
     const dispatch = useDispatch();
-    const total: number = useSelector((store) => store.wsReducer.total);
-    const totalToday: number = useSelector((store) => store.wsReducer.totalToday);
-    const ordersList: Array<TOrderPropType> = useSelector((store) => store.wsReducer.orders);
+    const total = useSelector((store) => store.wsReducer.total);
+    const totalToday = useSelector((store) => store.wsReducer.totalToday);
+    const ordersList = useSelector((store) => store.wsReducer.orders);
     const [finishedOrders, setFinishedOrders] = React.useState<Array<TOrderPropType>>([]);
     const [progressOrders, setProgressOrders] = React.useState<Array<TOrderPropType>>([]);
 

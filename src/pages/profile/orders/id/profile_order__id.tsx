@@ -22,7 +22,7 @@ export const ProfileOrdersIdControl: FunctionComponent<TProfileOrdersIdControlPr
     const [price, setPrice] = useState<number|string>();
     const [ingredientsList, setIngredientsList] = useState<Array<JSX.Element>>();
 
-    const fullIngredientList: Array<TIngredientPropType> = useSelector(
+    const fullIngredientList = useSelector(
         (store) => store.fullIngredients.collection,
     );
 

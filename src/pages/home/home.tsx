@@ -10,10 +10,7 @@ import loadingImg from "../../images/loading.gif";
 import { Modal } from "../../components/modal/modal";
 import { useDispatch, useSelector } from "../../services/storage/hooks";
 
-type THomePageProps = {
-};
-
-export const HomePage: FunctionComponent<THomePageProps> = () => {
+export const HomePage: FunctionComponent = () => {
     const dispatch = useDispatch();
 
     const modalControl = useSelector(

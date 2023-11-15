@@ -4,10 +4,8 @@ import { useParams } from "react-router-dom";
 import loadingImg from "../../images/loading.gif";
 import { useSelector } from "../../services/storage/hooks";
 
-export type TIngredientDetailsProps = {
-};
 
-export const IngredientDetails: FunctionComponent<TIngredientDetailsProps> = () => {
+export const IngredientDetails: FunctionComponent = () => {
     const { id } = useParams();
     const selectedIngredient = useSelector(
         (store) => store.fullIngredients.collection,

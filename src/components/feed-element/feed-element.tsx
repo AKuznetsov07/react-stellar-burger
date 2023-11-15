@@ -29,7 +29,7 @@ export const FeedElement: FunctionComponent<TFeedElementProps> = ({ orderData, l
     let price = 0;
 
     const location = useLocation();
-    const fullIngredientsList: Array<TIngredientPropType> = useSelector(
+    const fullIngredientsList = useSelector(
         (store) => store.fullIngredients.collection,
     );
 

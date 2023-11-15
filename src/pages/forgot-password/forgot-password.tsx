@@ -3,21 +3,18 @@ import {
   EmailInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./forgot-password.module.css";
-import React, { FormEvent, FunctionComponent } from "react";
+import React, { ChangeEvent, FormEvent, FunctionComponent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { sendResetPasswordMail } from "../../services/actions/auth";
 import { useDispatch } from "../../services/storage/hooks";
 import { TAuthPromiseResultType } from "../../services/custom-types/custom-types";
 
-type TForgotPasswordPageProps = {
-};
-
-export const ForgotPasswordPage: FunctionComponent<TForgotPasswordPageProps> = () => {
+export const ForgotPasswordPage: FunctionComponent = () => {
     const [value, setValue] = React.useState<{email:string}>({ email: "" });
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
-    const onMailChange = (e: { target: { value: string; }; }) => {
+    const onMailChange = (e: ChangeEvent<HTMLInputElement>) => {
         setValue({ ...value, email: e.target.value });
     };
 

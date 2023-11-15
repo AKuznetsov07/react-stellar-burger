@@ -2,7 +2,6 @@ import React, { FunctionComponent, useMemo } from "react";
 import styles from "./ingredient-block.module.css";
 import { TIngredientElementProps } from "../ingredient-element/ingredient-element";
 import { useSelector } from "../../services/storage/hooks";
-import { TIngredientPropType } from "../../services/custom-types/custom-types";
 
 type TIngredientBlockProps = {
     Title:string;
@@ -11,7 +10,7 @@ type TIngredientBlockProps = {
 };
 
 export const IngredientBlock: FunctionComponent<TIngredientBlockProps & { ref: React.Ref<HTMLDivElement> }> = React.forwardRef((props: TIngredientBlockProps, ref) => {
-    const fullIngredientsList: Array<TIngredientPropType> = useSelector(
+    const fullIngredientsList = useSelector(
         (store) => store.fullIngredients.collection,
     );
     const WrappedComponent = props.wrappedNode;

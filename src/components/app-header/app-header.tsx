@@ -8,9 +8,7 @@ import {
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-type TAppHeaderProps = {
-};
-export const AppHeader: FunctionComponent<TAppHeaderProps> = ({ ...props }) => {
+export const AppHeader: FunctionComponent = ({ ...props }) => {
     return (
         <header className={styles.appHeader}>
             <main className={styles.appHeaderMain}>
@@ -29,7 +27,9 @@ export const AppHeader: FunctionComponent<TAppHeaderProps> = ({ ...props }) => {
                             </p>
                         </Link>
                     </div>
-                    <Logo/>
+                    <Link to="/" className={styles.appHeaderItem}>
+                        <Logo />
+                    </Link>
                     <Link className={styles.reversedItem} to="/profile">
                         <ProfileIcon type="secondary" />
                         <p className="text text_type_main-default text_color_inactive">

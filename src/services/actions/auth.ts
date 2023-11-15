@@ -58,7 +58,7 @@ export const login = (email: string, password: string) => {
 };
 
 export const checkUserAuth: AppThunk = () => {
-    return (dispatch: AppDispatch) => {
+    return (dispatch) => {
         if (localStorage.getItem("accessToken")) {
             dispatch(getUser())
                 .catch((e: unknown) => {

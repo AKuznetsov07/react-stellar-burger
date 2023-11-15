@@ -43,7 +43,7 @@ export const IngredientElement: FunctionComponent<TIngredientElementProps> = ({ 
     useEffect(() => {
         dispatch(setDragStyleTypeAction(isDrag))
     }, [dispatch, isDrag]);
-    const selectedIngredientsList: Array<TSelectedIngredientPropType> = useSelector(
+    const selectedIngredientsList = useSelector(
         (store) => store.selectedIngredients.collection,
     );
     const bunData = useSelector((store) => store.selectedIngredients.bunData);

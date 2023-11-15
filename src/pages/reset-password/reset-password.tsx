@@ -4,24 +4,22 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./reset-password.module.css";
-import React, { FormEvent, FunctionComponent } from "react";
+import React, { ChangeEvent, FormEvent, FunctionComponent } from "react";
 import { Link } from "react-router-dom";
 import { sendChangePassword } from "../../services/actions/auth";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useDispatch } from "../../services/storage/hooks";
 
-type TResetPasswordPageProps = {
-};
-
-export const ResetPasswordPage: FunctionComponent<TResetPasswordPageProps> = () => {
+export const ResetPasswordPage: FunctionComponent = () => {
     const dispatch = useDispatch();
 
+    //const { values, handleChange, setValues } = useForm({});
     const [value, setValue] = React.useState({ pass: "", tokenFromMail: "" });
-    const onPassChange = (e: { target: { value: string; }; }) => {
+    const onPassChange = (e: ChangeEvent<HTMLInputElement>) => {
         setValue({ ...value, pass: e.target.value });
     };
 
-    const onTokenFromMailChange = (e: { target: { value: string; }; }) => {
+    const onTokenFromMailChange = (e: ChangeEvent<HTMLInputElement>) => {
         setValue({ ...value, tokenFromMail: e.target.value });
     };
 

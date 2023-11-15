@@ -18,10 +18,7 @@ import { BurgerElement } from "../burger-element/burger-element";
 import { useDispatch, useSelector } from "../../services/storage/hooks";
 import { TDragItemType, TSelectedIngredientPropType } from "../../services/custom-types/custom-types";
 
-type TBurgerConstructorProps = {
-};
-
-export const BurgerConstructor: FunctionComponent<TBurgerConstructorProps> = ({ ...props }) => {
+export const BurgerConstructor: FunctionComponent = ({ ...props }) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();

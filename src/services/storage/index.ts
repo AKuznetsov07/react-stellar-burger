@@ -25,10 +25,3 @@ export type RootState = ReturnType<typeof store.getState>;
 
 
 export type AppThunk<ReturnType = void> = ActionCreator<ThunkAction<ReturnType, Action, RootState, AppActions>>;
-export type AppThunk1<ReturnType = void> = ActionCreator<ThunkAction<ReturnType, AppState, RootState, AppActions>>;
-export type AppThunk2<ReturnType = void> = ThunkAction<
-    ReturnType,
-    AppState,
-    unknown,
-    AppActions
->;

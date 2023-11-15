@@ -1,5 +1,5 @@
 import styles from "./profile-edit-form.module.css";
-import React, { FunctionComponent, useState } from "react";
+import React, { ChangeEvent, FunctionComponent, useState } from "react";
 import {
   Input,
   Button,
@@ -9,12 +9,10 @@ import { updateUser } from "../../services/actions/auth";
 import { useDispatch, useSelector } from "../../services/storage/hooks";
 import { TUserDataType } from "../../services/custom-types/custom-types";
 
-type TProfileEditFormProps = {
-};
-
-export const ProfileEditForm: FunctionComponent<TProfileEditFormProps> = ({ ...props }) => {
+export const ProfileEditForm: FunctionComponent = ({ ...props }) => {
     const dispatch = useDispatch();
     const user = useSelector((store) => store.user.user);
+    //const { values, handleChange, setValues } = useForm({});
     const [value, setValue] = useState({
         email: user?.email ? user.email : "",
         password: user?.password ? user.password : "",
@@ -22,15 +20,15 @@ export const ProfileEditForm: FunctionComponent<TProfileEditFormProps> = ({ ...p
         needSave: false,
     });
 
-    const onPassChange = (e: { target: { value: string; }; }) => {
+    const onPassChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newValue = { ...value, password: e.target.value };
         setValue({ ...newValue, needSave: checkValues(newValue) });
     };
-    const onMailChange = (e: { target: { value: string; }; }) => {
+    const onMailChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newValue = { ...value, email: e.target.value };
         setValue({ ...newValue, needSave: checkValues(newValue) });
     };
-    const onNameChange = (e: { target: { value: string; }; }) => {
+    const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newValue = { ...value, name: e.target.value };
         setValue({ ...newValue, needSave: checkValues(newValue) });
     };

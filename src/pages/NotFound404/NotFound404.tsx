@@ -2,10 +2,7 @@ import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
 import styles from "./NotFound404.module.css";
 
-type TNotFound404Props = {
-};
-
-export const NotFound404: FunctionComponent<TNotFound404Props> = () => {
+export const NotFound404: FunctionComponent = () => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.container}>

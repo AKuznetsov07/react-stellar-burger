@@ -4,21 +4,19 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import React, { FormEvent, FunctionComponent } from "react";
+import React, { ChangeEvent, FormEvent, FunctionComponent } from "react";
 import { Link } from "react-router-dom";
 import { login } from "../../services/actions/auth";
 import { useDispatch } from "../../services/storage/hooks";
 
-type TLoginPageProps = {
-};
-
-export const LoginPage: FunctionComponent<TLoginPageProps> = () => {
+export const LoginPage: FunctionComponent = () => {
+    //const { values, handleChange, setValues } = useForm({});
     const [value, setValue] = React.useState({ email: "", password: "" });
     const dispatch = useDispatch();
-    const onPassChange = (e: { target: { value: string; }; }) => {
+    const onPassChange = (e: ChangeEvent<HTMLInputElement>) => {
         setValue({ ...value, password: e.target.value });
     };
-    const onLogChange = (e: { target: { value: string; }; }) => {
+    const onLogChange = (e: ChangeEvent<HTMLInputElement>) => {
         setValue({ ...value, email: e.target.value });
     };
 
